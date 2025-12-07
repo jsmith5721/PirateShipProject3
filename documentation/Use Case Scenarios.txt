@@ -1,0 +1,195 @@
+Login
+Context:
+CrewMate is not logged in
+Primary Flow
+1.	System prompts user to enter login credentials (username and password)
+2.	User provides all valid credentials
+3.	User submits login request
+4.	System verifies credentials
+5.	System presents user with the landing page for the system
+
+Alternative Flows
+Missing Username/Password
+A2. User provides incomplete credentials (i.e., no information, only username, or only password) A3. User is unable to submit login request and System prompts user to provide username
+A4. Return to Primary Flow step 2 Invalid Credentials
+
+A2. User provides invalid credentials (i.e., username does not exist in system or password is not correct for provided username)
+A3. User submits login request
+A4. System identifies invalid credentials
+A5. System prompts user that credentials provided are invalid A6. Return to Primary Flow step 1
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Add Stock:
+Context:
+CrewMate is logged in
+Ship has available capacity for more stock to be added
+Primary Flow
+1.	User indicates they want to add new stock to the system
+2.	System prompts user to provide stock information including name, quantity, condition (perfect, usable, or unusable), and any special qualities (flammable, liquid, or perishable). Additionally, perishable stock must provide expiration date.
+3.	User provides all information
+4.	System verifies there is a storage compartment with sufficient space capable of storing the stock
+	a.	Storage compartment must be labeled as appropriate for all special qualities.
+5.	System presents all available storage compartments that can store the stock
+6.	User selects which storage compartment to use for the stock
+7.	System adds the stock to the selected storage compartment
+8.	System logs the change in stock including the following details.
+	a.	Identifier of the CrewMate that added the stock
+	b.	All provided information for the stock
+	c.	Identifier of storage compartment updated
+	d.	Available storage capacity for the compartment after adding the stock
+	e.	Time the stock was added to the storage compartment
+9.	System displays confirmation message of stock addition to user including all information logged for the change in stock
+
+Alternative Flows
+No Storage Compartment Available with Sufficient Space for Stock
+A4. System identifies that no storage compartment exists with sufficient space capable of storing the stock.
+A5. System notifies user that no storage compartment has sufficient space available to store indicated quantity.
+A6. System presents a list of storage compartments with available space capable of storing the stock.
+A7. System prompts the user to revise the quantity being added to be within capacity limit of at least one storage compartment.
+A8. Return to primary flow step 2 with prior provided stock information prefilled.
+
+No Storage Compartment Available to Store Stock with Indicated Special Quality
+A1. System identifies that no storage compartment exists which is capable of storing stock with the indicated special qualities.
+A2. System notifies the user that inventory has no storage compartment available for special qualities indicated.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+View Stock Changes:
+Context:
+Quartermaster is logged in
+Primary Flow
+1.	Quartermaster requests to view stock changes
+2.	System presents quartermaster with a list of all stock changes, presented in reverse chronological order (most recent first)
+3.	Quartermaster views list of stock changes
+
+Alternative Flows
+Quartermaster Filters Stock Changes by Special Quality
+A3. Quatermaster selects one or more special qualities
+A4. System removes all stock changes from list for changes to stock that do not the selected special qualities
+A5. Return to primary flow step 3
+
+Quartermaster Filters Stock Changes by CrewMate
+A3. Quatermaster selects one or more CrewMates who are included in the list of stock changes A4. System removes all stock changes from list for changes not made by the selected CrewMate(s) A5. Return to primary flow step 3
+
+Quartermaster Filters Stock Changes by Valid Time Range
+A3. Quatermaster selects a range of time (start and/or end where end is after start if provided)
+A4. System removes all stock changes from list for changes not made during the selected time range A5. Return to primary flow step 3
+
+Quartermaster Filters Stock Changes by Invalid Time Range
+A3. Quatermaster selects a range of time (start and end where end is before or equal to start) A4. System notifies Quartermaster that time range is not valid, end time must be after start time. A5. Return to alternative flow step A3 with prior provided start and end time prefilled
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+View Available Food Stock:
+Context:
+Cook is logged in
+Primary Flow
+1.	Cook would click View Inventory button
+2.	System presents Cook with list of available stocks that only apply to his role (Food stocks) with their conditions, quantities, and expiration dates
+3.	Cook selects the stock he wants to remove from and inputs quantity he would like to remove
+4.	System presents warning message with stock details and message asking if he is sure he wants to remove that quantity of stocks
+5.	Cook presses confirmation button
+6.	System updates stock list to reflect new quantities
+7.	System shows confirmation message that stocks were successfully removed
+
+Alternative Flows
+There are no stocks for the Cook to view
+A2. View Inventory Page with empty view list
+A3. Display message in output box stating there is no available food on the ship
+A4. System will disable the Remove Stock button, since there are no stocks that can be removed.
+A5. Cook presses back button and is relocated to the home page.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Remove Food Stock from Inventory
+Context:
+Cook is logged in.
+There is food stock available.
+Cook is on View Inventory Page.
+
+Primary Flow:
+1. Cook selects a food stock from the list.
+2. Cook inputs quantity they want to remove.
+3. System displays a warning popup with stock information and asking if the Cook is sure of the removal.
+4. Cook confirms.
+5. System updates the stock quantity to reflect the removal.
+6. System logs the change with information about the Cook, the type of stock removed, which stock was removed and how many, the storage compartment updated, new available quantity, and timestamp.
+7. System displays confirmation message of stock removal.
+
+Alternative Flows:
+A1- Requested Quantity > Available Quantity
+A1. System notifies Cook that requested quantity exceeds available amount.
+A2. System prompts Cook to enter a valid quantity.
+A4. Return to Primary Flow step 2 with previous input prefilled.
+
+A2 - Cook Cancels Removal
+A1. Cook clicks Cancel on confirmation popup.
+A2. System closes popup and makes no changes.
+A3. Return to Primary Flow step 1.
+
+A3 - Stock Becomes Zero After Removal
+A1. System updates quantity to zero.
+A2. System removes stock item from displayed list.
+A3. System displays confirmation explaining stock has no more units left.
+A4. Return to Primary Flow step 1
+
+A4 - Tries to Remove Zero or Negative Quantity
+A1. Cook enters an invalid quantity (0 or less).
+A2. System rejects input, displays: "Quantity must be greater than zero."
+A3. Return to Primary Flow step 3 with quantity field cleared.
+
+A5 - Stock Expires / Condition Changes Before Removal
+A1. During removal attempt, System detects stock expiration date has passed
+A2. System notifies Cook that the stock is no longer valid for removal for usage purposes.
+A3. System asks if the Cook would still like to remove the expired goods to throw away
+A4. Cook confirms
+A5. System updates the inventory
+A6. Return to Primary Flow step 2
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+View Available Munition Stock:
+Context:
+Officer is logged in.
+
+Primary Flow:
+1. Officer clicked View Inventory button on home page.
+2. System displays a list of available stocks that are type Munition and their information.
+3. Officer reviews the munition stock list.
+
+Alternative Flows:
+No Munitions Available
+A1. View Inventory Page with empty view list
+A2. Display message in output box stating there is no available munition on the ship.
+A3. System disables the Remove Stock button.
+A4. Officer clicks back and is relocated to the home page.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Remove Munition Stock from Inventory
+Context:
+Officer is logged in.
+There is munition stock available.
+Officer is on View Inventory Page.
+
+Primary Flow:
+1. Officer selects a munition stock from the list.
+2. Officer inputs quantity they want to remove.
+3. System displays a warning popup with stock information and asking if the Officer is sure of the removal.
+4. Officer confirms.
+5. System updates the stock quantity to reflect the removal.
+6. System logs the change with information about the Officer, the type of stock removed, which stock was removed and how many, the storage compartment updated, new available quantity, and timestamp.
+7. System displays confirmation message of stock removal.
+
+Alternative Flows:
+A1- Requested Quantity > Available Quantity
+A1. System notifies Officer that requested quantity exceeds available amount.
+A2. System prompts Officer to enter a valid quantity.
+A4. Return to Primary Flow step 2 with previous input prefilled.
+
+A2 - Officer Cancels Removal
+A1. Officer clicks Cancel on confirmation popup.
+A2. System closes popup and makes no changes.
+A3. Return to Primary Flow step 1.
+
+A3 - Stock Becomes Zero After Removal
+A1. System updates quantity to zero.
+A2. System removes stock item from displayed list.
+A3. System displays confirmation explaining stock has no more units left.
+A4. Return to Primary Flow step 1
+
+A4 - Tries to Remove Zero or Negative Quantity
+A1. Officer enters an invalid quantity (0 or less).
+A2. System rejects input, displays: "Quantity must be greater than zero."
+A3. Return to Primary Flow step 3 with quantity field cleared.
+
