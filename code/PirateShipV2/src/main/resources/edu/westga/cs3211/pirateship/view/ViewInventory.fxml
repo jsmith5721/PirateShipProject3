@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3211.pirateship.view.ViewInventoryView">
+
+    <top>
+        <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="View Inventory" BorderPane.alignment="CENTER" />
+    </top>
+
+    <center>
+        <TableView fx:id="stockTable" prefHeight="400" prefWidth="800">
+            <columns>
+                <TableColumn fx:id="nameCol" prefWidth="150" text="Name" />
+                <TableColumn fx:id="qtyCol" prefWidth="100" text="Quantity" />
+                <TableColumn fx:id="conditionCol" prefWidth="150" text="Condition" />
+                <TableColumn fx:id="specialCol" prefWidth="200" text="Special Qualities" />
+                <TableColumn fx:id="expCol" prefWidth="200" text="Expiration Date" />
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="20">
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+            <Button fx:id="removeBtn" text="Remove Stock" />
+            <Button fx:id="backBtn" text="Back" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -28,6 +28,8 @@ public class LandingPage {
     @FXML
     private Button addContainerButton;
     @FXML
+    private Button viewInventoryButton;
+    @FXML
     private Label welcomeLable;
     private LandingPageVM viewModel;
 
@@ -62,12 +64,44 @@ public class LandingPage {
         this.reviewStockButton.visibleProperty().bind(this.viewModel.canReviewStockChangesProperty());
         this.reviewStockButton.managedProperty().bind(this.viewModel.canReviewStockChangesProperty());
         this.reviewStockButton.disableProperty().bind(this.viewModel.canReviewStockChangesProperty().not());
-
+        
+        
+        this.setUpListenerForViewInventoryButton();
         this.setUpListenerForAddStockButton();
 		this.setUpListenerForAddContainerButton();
 		this.setUpListenerForReviewStockButton();
 		this.setUpListenerForLogoutButton();
     }
+    
+    /**
+     * Sets the up listener for add stock button.
+     */
+    private void setUpListenerForViewInventoryButton() {
+		this.viewInventoryButton.setOnAction((ActionEvent event) -> {
+			try {
+	            FXMLLoader loader = new FXMLLoader();
+	            loader.setLocation(LandingPage.class.getResource("ViewInventory.fxml"));
+	            loader.load();
+	            
+	            ViewInventoryView controller = loader.getController();
+	            // Debugging line to print containers
+	            System.out.println("Landing to Add Stock: \n" + this.viewModel.getShip().getContainers());
+
+	            Parent parent = loader.getRoot();
+	            Scene scene = new Scene(parent);
+
+	            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+	            stage.setScene(scene);
+	            stage.setTitle("Add Stock");
+	            stage.show();
+
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Add Stock Page.");
+	            alert.showAndWait();
+	        }
+		});
+	}
     
     /**
      * Sets the up listener for add stock button.
