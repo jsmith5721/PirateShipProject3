@@ -3,6 +3,7 @@ package edu.westga.cs3211.pirateship.model.cargohull;
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Conditions;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,10 @@ public class TestGetAvailableCapacity {
     @Test
     public void testReducedCapacity() {
         CargoHull hull = new CargoHull(300);
-        Container c1 = new Container(200, new ArrayList<>());
-        c1.getStockItems().add(new Stock("X", 2, 10, Conditions.GOOD));
-        Container c2 = new Container(200, new ArrayList<>());
-        c2.getStockItems().add(new Stock("Y", 5, 5, Conditions.GOOD));
+        Container c1 = new Container(200, new ArrayList<>(), StockType.OTHER);
+        c1.getStockItems().add(new Stock("X", 2, 10, Conditions.GOOD, StockType.OTHER));
+        Container c2 = new Container(200, new ArrayList<>(), StockType.OTHER);
+        c2.getStockItems().add(new Stock("Y", 5, 5, Conditions.GOOD, StockType.OTHER));
         hull.getContainers().add(c1);
         hull.getContainers().add(c2);
         assertEquals(255, hull.getAvailableCapacity());

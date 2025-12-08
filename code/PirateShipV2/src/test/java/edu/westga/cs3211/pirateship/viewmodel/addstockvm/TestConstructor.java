@@ -17,6 +17,6 @@ public class TestConstructor {
         assertEquals(currentUser, vm.getShip().getCurrentUser());
         assertEquals(5, vm.getSpecialQualitiesListProperty().size());
         assertEquals(0, vm.getSelectedSpecialQualitiesProperty().size());
-        assertEquals(0, vm.getContainerListProperty().size());
+        assertEquals(vm.getShip().getContainers().size(), vm.getContainerListProperty().size());
     }
 }

@@ -13,6 +13,7 @@ import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 
 public class TestGetRemainingCapacity {
@@ -23,7 +24,7 @@ public class TestGetRemainingCapacity {
 	@BeforeEach
 	public void setUp() throws Exception {
 		this.qualities = new ArrayList<>();
-		this.container = new Container(500, qualities);
+		this.container = new Container(500, qualities, StockType.OTHER);
 		this.currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
 	}
 	
@@ -37,7 +38,7 @@ public class TestGetRemainingCapacity {
 	@Test
 	public void testGetRemainingCapacityAfterAddingStock() {
 		int expected = 300;
-		Stock stockItem = new Stock("Gold Coins", 200, 1, Conditions.NEW);
+		Stock stockItem = new Stock("Gold Coins", 200, 1, Conditions.NEW, StockType.OTHER);
 		this.container.addStockItem(stockItem, this.currentUser);
 		int actual = this.container.getRemainingCapacity();
 		assertEquals(expected, actual);

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 
 public class TestGetSpecialQualitiesString {
 	
@@ -24,7 +25,7 @@ public class TestGetSpecialQualitiesString {
 	@Test
 	public void testGetSpecialQualitiesStringEmpty() {
 		String expected = "";
-		container = new Container(100, qualities);
+		container = new Container(100, qualities, StockType.OTHER);
 		String actual = this.container.getSpecialQualitiesString();
 		assertEquals(expected, actual);
 	}
@@ -32,7 +33,7 @@ public class TestGetSpecialQualitiesString {
 	@Test
 	public void testGetSpecialQualitiesStringOneQuality() {
 		qualities.add(SpecialQualities.EXPLOSIVE);
-		container = new Container(100, qualities);
+		container = new Container(100, qualities, StockType.OTHER);
 		String expected = "EXPLOSIVE,";
 		String actual = this.container.getSpecialQualitiesString();
 		assertEquals(expected, actual);
@@ -42,7 +43,7 @@ public class TestGetSpecialQualitiesString {
 	public void testGetSpecialQualitiesString() {
 		qualities.add(SpecialQualities.EXPLOSIVE);
 		qualities.add(SpecialQualities.FRAGILE);
-		container = new Container(100, qualities);
+		container = new Container(100, qualities, StockType.OTHER);
 		String expected = "EXPLOSIVE, FRAGILE,";
 		String actual = this.container.getSpecialQualitiesString();
 		assertEquals(expected, actual);

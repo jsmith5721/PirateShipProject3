@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 
@@ -20,7 +21,7 @@ public class TestConstructor {
         User user = new User("Jack", "jack", "pw", Roles.CREWMATE);
 
         assertThrows(NullPointerException.class, () -> {
-            new Transaction(new Date(), "Fish", 2, user, null);
+            new Transaction(new Date(), "Fish", 2, user, StockType.FOOD, null);
         });
     }
 
@@ -30,12 +31,13 @@ public class TestConstructor {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         Date date = new Date(100000);
 
-        Transaction tx = new Transaction(date, "Fish", 2, user, qualities);
+        Transaction tx = new Transaction(date, "Fish", 2, user, StockType.FOOD, qualities);
 
         assertEquals(date, tx.getDate());
         assertEquals("Fish", tx.getStockName());
         assertEquals(2, tx.getQuantity());
         assertEquals(user, tx.getCrewmember());
+        assertEquals(StockType.FOOD, tx.getStockType());
         assertTrue(tx.getSpecialQualitiesString().isEmpty());
     }
 
@@ -47,7 +49,7 @@ public class TestConstructor {
         qualities.add(SpecialQualities.VALUABLE);
         Date date = new Date(100000);
         
-        Transaction tx = new Transaction(date, "Gold", 1, user, qualities);
+        Transaction tx = new Transaction(date, "Gold", 1, user, StockType.OTHER, qualities);
 
         String result = tx.getSpecialQualitiesString();
 
