@@ -93,12 +93,12 @@ public class LandingPage {
 
 	            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
 	            stage.setScene(scene);
-	            stage.setTitle("Add Stock");
+	            stage.setTitle("View Inventory");
 	            stage.show();
 
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
-	            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Add Stock Page.");
+	            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading View Inventory Page.");
 	            alert.showAndWait();
 	        }
 		});

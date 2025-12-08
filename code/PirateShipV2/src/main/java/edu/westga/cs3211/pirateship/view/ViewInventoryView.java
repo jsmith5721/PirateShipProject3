@@ -1,5 +1,10 @@
 package edu.westga.cs3211.pirateship.view;
 
+import java.time.LocalDate;
+
+import edu.westga.cs3211.pirateship.model.Ship;
+import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.viewmodel.ViewInventoryVM;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,16 +15,28 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import edu.westga.cs3211.pirateship.model.Stock;
-import edu.westga.cs3211.pirateship.model.Ship;
-import edu.westga.cs3211.pirateship.viewmodel.ViewInventoryVM;
 
-import java.time.LocalDate;
-
+/**
+ * Controller class for ViewInventory page.
+ * 
+ * @author Emi Collins
+ * @version Fall 2025
+ */
 public class ViewInventoryView {
+
+	@FXML
+	private Button logoutButton;
+
+	@FXML
+	private Button removeButton;
+
+	@FXML
+	private Button backButton;
 
 	@FXML
 	private TableView<Stock> stockTable;
@@ -39,12 +56,26 @@ public class ViewInventoryView {
 	@FXML
 	private TableColumn<Stock, LocalDate> expCol;
 
+	@FXML
+	private Label welcomeLable;
+
 	private ViewInventoryVM viewModel;
-	
+
 	private Ship ship;
 
-	/*
-	 * Sets the given ship as the current ship for the inventory
+	@FXML
+	void initialize() {
+		assert this.welcomeLable != null
+				: "fx:id=\"welcomeLable\" was not injected: check your FXML file 'ViewInventory.fxml'.";
+		assert this.logoutButton != null
+				: "fx:id=\"logoutButton\" was not injected: check your FXML file 'ViewInventory.fxml'.";
+
+		this.setUpListenerForLogoutButton();
+	}
+
+	/**
+	 * Sets the ship for the page.
+	 * @param ship - the ship being set
 	 */
 	public void setShip(Ship ship) {
 		this.ship = ship;
@@ -52,8 +83,10 @@ public class ViewInventoryView {
 		this.bindViewModel();
 	}
 
-	/*
-	 * Sets the scene to show the landing page once more
+	/**
+	 * Sets the scene to show the landing page once more from back.
+	 * 
+	 * @param event - the back button being triggered
 	 */
 	public void returnToLandingPage(ActionEvent event) {
 		try {
@@ -62,27 +95,30 @@ public class ViewInventoryView {
 			loader.load();
 			LandingPage landingPageController = loader.getController();
 			landingPageController.startup(this.ship.getCurrentUser());
-			
-			Parent root = loader.getRoot();
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        Scene scene = new Scene(root);
-	        stage.setScene(scene);
-	        stage.setTitle("Flying Dutchman - Home");
-	        stage.show();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Landing Page.");
-            alert.showAndWait();
-        }
+			Parent root = loader.getRoot();
+			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			Scene scene = new Scene(root);
+			stage.setScene(scene);
+			stage.setTitle("Flying Dutchman - Home");
+			stage.show();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Landing Page.");
+			alert.showAndWait();
+		}
 	}
-	
+
 	private void bindViewModel() {
+		this.welcomeLable.textProperty().bind(this.viewModel.welcomeMessageProperty());
+
 		this.nameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getName()));
 
 		this.qtyCol.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getQuantity()));
 
-		this.conditionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCondition().toString()));
+		this.conditionCol
+				.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCondition().toString()));
 
 		this.specialCol.setCellValueFactory(
 				cell -> new SimpleStringProperty(cell.getValue().getSpecialQualities().toString()));
@@ -92,5 +128,33 @@ public class ViewInventoryView {
 		this.viewModel.loadEntireInventory(this.ship);
 
 		this.stockTable.setItems(this.viewModel.getStocks());
+	}
+
+	/**
+	 * Sets the up listener for logout button.
+	 */
+	private void setUpListenerForLogoutButton() {
+		this.logoutButton.setOnAction((ActionEvent event) -> {
+			try {
+				this.viewModel.saveData();
+
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(LandingPage.class.getResource("LoginView.fxml"));
+				loader.load();
+
+				Parent parent = loader.getRoot();
+				Scene scene = new Scene(parent);
+
+				Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+				stage.setScene(scene);
+				stage.setTitle("Login");
+				stage.show();
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				Alert alert = new Alert(Alert.AlertType.ERROR, "Error logging user out.");
+				alert.showAndWait();
+			}
+		});
 	}
 }
