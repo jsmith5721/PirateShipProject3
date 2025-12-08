@@ -110,6 +110,23 @@ public class TestAddStock {
 
         assertThrows(IllegalArgumentException.class, () -> vm.addStock());
     }
+    
+    @Test
+    public void testAddStockThrowsForNullSelectedContainer() {
+		ArrayList<SpecialQualities> qualities = new ArrayList<>();
+		Container container = new Container(100, qualities, StockType.OTHER);
+
+		AddStockVM vm = new AddStockVM(this.currentUser);
+		vm.getShip().addContainer(container);
+		vm.getNameProperty().set("Rope");
+		vm.getSizeProperty().set(5);
+		vm.getQuantityProperty().set(1);
+		vm.getConditionProperty().set(Conditions.GOOD);
+		vm.getStockTypeProperty().set(StockType.OTHER);
+		vm.getSelectedContainerProperty().set(null);
+		
+		assertThrows(IllegalArgumentException.class, () -> vm.addStock());
+	}
 
     @Test
     public void testAddStockThrowsForNoSelectedContainer() {
@@ -124,7 +141,7 @@ public class TestAddStock {
     }
 
     @Test
-    public void testAddStockThrowsForMissingExpirationDate() {
+    public void testAddStockThrowsForNullExpirationDate() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.PARISHABLE);
 
@@ -136,8 +153,10 @@ public class TestAddStock {
         vm.getSizeProperty().set(2);
         vm.getQuantityProperty().set(1);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.FOOD);
         vm.updateSelectedQualities(qualities);
         vm.getSelectedContainerProperty().set(container);
+        vm.getExpirationDateProperty().set(null);
 
         assertThrows(IllegalArgumentException.class, () -> vm.addStock());
     }
@@ -152,6 +171,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(2);
         vm.getQuantityProperty().set(3);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.OTHER);
         vm.getSelectedContainerProperty().set(container);
 
         String result = vm.addStock();
@@ -168,6 +188,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(1);
         vm.getQuantityProperty().set(10);
         vm.getConditionProperty().set(Conditions.NEW);
+        vm.getStockTypeProperty().set(StockType.OTHER);
         vm.getSelectedContainerProperty().set(container);
 
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
@@ -207,6 +228,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(2);
         vm.getQuantityProperty().set(4);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.FOOD);
         vm.getSelectedContainerProperty().set(container);
 
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
@@ -230,6 +252,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(5);
         vm.getQuantityProperty().set(2);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.OTHER);
         vm.getSelectedContainerProperty().set(container);
 
         String result = vm.addStock();
@@ -250,6 +273,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(3);
         vm.getQuantityProperty().set(1);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.OTHER);
         vm.updateSelectedQualities(qualities);
         vm.getSelectedContainerProperty().set(container);
         
@@ -270,6 +294,7 @@ public class TestAddStock {
         vm.getSizeProperty().set(2);
         vm.getQuantityProperty().set(3);
         vm.getConditionProperty().set(Conditions.GOOD);
+        vm.getStockTypeProperty().set(StockType.FOOD);
         vm.updateSelectedQualities(qualities);
         vm.getSelectedContainerProperty().set(container);
         vm.getExpirationDateProperty().set(LocalDate.now().plusDays(1));

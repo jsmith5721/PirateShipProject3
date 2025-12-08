@@ -198,6 +198,24 @@ public class AddStockVM {
 	public BooleanProperty showExpirationProperty() {
 		return this.showExpiration;
 	}
+	
+	/**
+	 * Gets the master container list.
+	 *
+	 * @return the master container list
+	 */
+	public ObservableList<Container> getMasterContainerList() {
+		return this.masterContainerList;
+	}
+	
+	/**
+	 * Gets the filtered container list.
+	 *
+	 * @return the filtered container list
+	 */
+	public ObservableList<Container> getFilteredContainerList() {
+		return this.filteredContainerList;
+	}
 
 	/**
 	 * Gets the ship.

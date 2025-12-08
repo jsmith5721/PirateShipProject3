@@ -17,6 +17,9 @@ public class TestConstructor {
         User currentUser = new User("Admin", "admin", "pw", Roles.QUARTERMASTER);
 
         StockChangesVM vm = new StockChangesVM(currentUser);
+        vm.getShip().getTransactions().clear();
+        vm.masterTransactionListProperty().setAll(vm.getShip().getTransactions());
+        vm.filteredTransactionsProperty().setAll(vm.getShip().getTransactions());
         
         assertEquals(currentUser, vm.getShip().getCurrentUser());
         assertEquals(0, vm.filteredTransactionsProperty().size());
@@ -26,10 +29,11 @@ public class TestConstructor {
 
         assertTrue(vm.selectedSpecialQualitiesProperty().isEmpty());
 
-        assertEquals(2, vm.crewmemberListProperty().size());
+        assertEquals(4, vm.crewmemberListProperty().size());
 
         assertNull(vm.selectedCrewmemberProperty().get());
         assertNull(vm.startDateProperty().get());
         assertNull(vm.endDateProperty().get());
+        assertNull(vm.getStockTypeProperty().get());
     }
 }

@@ -1,6 +1,8 @@
 package edu.westga.cs3211.pirateship.model.container;
 
 import edu.westga.cs3211.pirateship.model.Container;
+import edu.westga.cs3211.pirateship.model.StockType;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +20,7 @@ public class TestUpdateIdCounter {
         ids.add(3);
 
         Container.updateIdCounter(ids);
-        Container container = new Container(10, new ArrayList<>());
+        Container container = new Container(10, new ArrayList<>(), StockType.OTHER);
         
         assertEquals(13, container.getContainerID());
     }

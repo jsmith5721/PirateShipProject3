@@ -2,6 +2,8 @@ package edu.westga.cs3211.pirateship.model.container;
 
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +14,7 @@ public class TestAddSpecialQualites {
 
     @Test
     void testAddSpecialQualityNullQuality() {
-        Container container = new Container(10, new ArrayList<>());
+        Container container = new Container(10, new ArrayList<>(), StockType.OTHER);
 
         assertThrows(IllegalArgumentException.class, () -> {
             container.addSpecialQuality(null);
@@ -23,7 +25,7 @@ public class TestAddSpecialQualites {
     void testAddDuplicateQualityThrows() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.FRAGILE);
-        Container container = new Container(10, qualities);
+        Container container = new Container(10, qualities, StockType.OTHER);
 
         assertThrows(IllegalArgumentException.class, () -> {
             container.addSpecialQuality(SpecialQualities.FRAGILE);
@@ -32,7 +34,7 @@ public class TestAddSpecialQualites {
 
     @Test
     void testAddValidQuality() {
-        Container container = new Container(10, new ArrayList<>());
+        Container container = new Container(10, new ArrayList<>(), StockType.OTHER);
         container.addSpecialQuality(SpecialQualities.LIQUID);
         
         assertEquals(1, container.getSpecialQualities().size());
