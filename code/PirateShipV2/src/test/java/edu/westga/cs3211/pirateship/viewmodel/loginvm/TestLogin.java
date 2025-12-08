@@ -23,6 +23,15 @@ public class TestLogin {
     }
 
     @Test
+    void testLoginThrowsWhenUsernameNull() {
+        LoginVM vm = new LoginVM();
+        vm.usernameProperty().set(null);
+        vm.passwordProperty().set("pw");
+
+        assertThrows(IllegalArgumentException.class, () -> vm.login());
+    }
+    
+    @Test
     void testLoginThrowsWhenUsernameBlank() {
         LoginVM vm = new LoginVM();
         vm.usernameProperty().set("");
@@ -36,6 +45,15 @@ public class TestLogin {
         LoginVM vm = new LoginVM();
         vm.usernameProperty().set("bob");
         vm.passwordProperty().set("");
+
+        assertThrows(IllegalArgumentException.class, () -> vm.login());
+    }
+    
+    @Test
+    void testLoginThrowsWhenPasswordNull() {
+        LoginVM vm = new LoginVM();
+        vm.usernameProperty().set("bob");
+        vm.passwordProperty().set(null);
 
         assertThrows(IllegalArgumentException.class, () -> vm.login());
     }

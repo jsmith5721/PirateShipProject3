@@ -1,7 +1,7 @@
 package edu.westga.cs3211.pirateship.view;
 
-import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 
 import javafx.event.ActionEvent;
@@ -51,10 +51,10 @@ public class AddContainerView {
 	/**
 	 * Sets the ship.
 	 *
-	 * @param ship the new ship
+	 * @param currentUser currently logged in user
 	 */
-	public void setShip(Ship ship) {
-		this.viewModel = new AddContainerVM(ship);
+	public void startup(User currentUser) {
+		this.viewModel = new AddContainerVM(currentUser);
 		this.bindViewModel();
 	}
 
@@ -89,7 +89,6 @@ public class AddContainerView {
 					Alert alert = new Alert(Alert.AlertType.INFORMATION, result + " added successfully.");
 					alert.showAndWait();
 				}
-				System.out.println("Containers after addition: \n" + this.viewModel.getShip().getContainers());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				Alert alert = new Alert(Alert.AlertType.ERROR, "Error adding Container.");
@@ -132,15 +131,14 @@ public class AddContainerView {
 	private void setUpListenerForHomeButton() {
 		this.homeButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(LoginView.class.getResource("LandingPage.fxml"));
 				loader.load();
-
+				
 				LandingPage controller = loader.getController();
-				Ship newShip = this.viewModel.getShip();
-				controller.setShip(newShip);
-				//Debugging output
-				System.out.println("Add Container to Landing: \n" + this.viewModel.getShip().getContainers());
+				controller.startup(this.viewModel.getShip().getCurrentUser());
 
 				Parent parent = loader.getRoot();
 				Scene scene = new Scene(parent);

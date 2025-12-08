@@ -22,17 +22,16 @@ import edu.westga.cs3211.pirateship.model.User;
  * @version Fall 2025
  */
 public class TransactionSerializer {
-	private static final String FILE = "transactionHistory.txt";
-
 	/**
 	 * Serializes the transaction history of the given CargoHull to a file.
 	 * 
 	 * @param hull the CargoHull whose transaction history to serialize
+	 * @param file the file to serialize to
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static void serializeTransactionHistoryToFile(CargoHull hull) throws IOException {
+	public static void saveTransactionHistory(CargoHull hull, String file) throws IOException {
 		String data = writeAll(hull.getTransactionHistory());
-		try (FileWriter out = new FileWriter(FILE)) {
+		try (FileWriter out = new FileWriter(file)) {
 			out.write(data);
 		}
 	}
@@ -44,7 +43,7 @@ public class TransactionSerializer {
 	 * @throws IOException if an I/O error occurs
 	 */
 	public static List<Transaction> loadTransactionHistory() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get(FILE));
+		List<String> lines = Files.readAllLines(Paths.get(ShipSerializer.TRANSACTION_TXT_FILE));
 		if (lines.isEmpty()) {
 			return null;
 		}

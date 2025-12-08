@@ -11,15 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3211.pirateship.model.Roles;
-import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.StockChangesVM;
 
 public class TestApplyFilter {
-
-    private Ship ship;
+	private StockChangesVM vm;
+	private User currentUser;
     private User userA;
     private User userB;
     private Transaction t1;
@@ -32,12 +31,15 @@ public class TestApplyFilter {
 
     @BeforeEach
     void setup() {
-        this.ship = new Ship("Ship", 100);
+        this.currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
+        this.vm = new StockChangesVM(this.currentUser);
+        
         this.userA = new User("Alice", "alice", "pw", Roles.CREWMATE);
         this.userB = new User("Bob", "bob", "pw", Roles.CREWMATE);
-
-        this.ship.getCrew().add(this.userA);
-        this.ship.getCrew().add(this.userB);
+        this.vm.getShip().getCrew().add(this.userA);
+        this.vm.getShip().getCrew().add(this.userB);
+        this.vm.crewmemberListProperty().add(this.userA.getName());
+        this.vm.crewmemberListProperty().add(this.userB.getName());
 
         ArrayList<SpecialQualities> q1 = new ArrayList<>();
         q1.add(SpecialQualities.FRAGILE);
@@ -53,21 +55,40 @@ public class TestApplyFilter {
         this.t2 = new Transaction(toDate(LocalDate.of(2024, 2, 15)), "B", 1, this.userB, q2);
         this.t3 = new Transaction(toDate(LocalDate.of(2024, 3, 10)), "C", 1, this.userA, q3);
 
-        this.ship.getTransactions().add(this.t1);
-        this.ship.getTransactions().add(this.t2);
-        this.ship.getTransactions().add(this.t3);
+        this.vm.getShip().getTransactions().add(this.t1);
+        this.vm.getShip().getTransactions().add(this.t2);
+        this.vm.getShip().getTransactions().add(this.t3);
+        this.vm.masterTransactionListProperty().addAll(this.t1, this.t2, this.t3);
+    }
+    
+    @Test
+    public void testInitialFilteredListMatchesMasterList() {
+    	this.vm.applyFilter();
+		assertEquals(this.vm.masterTransactionListProperty().size(), this.vm.filteredTransactionsProperty().size());
+	}
+    
+    @Test
+    public void testNoFilterForCrewmemberNull() {
+		this.vm.selectedCrewmemberProperty().set(null);
+		this.vm.applyFilter();
+		assertEquals(this.vm.masterTransactionListProperty().size(), this.vm.filteredTransactionsProperty().size());
+    }
+    
+    @Test
+    public void testNoFilterForCrewmemberBlank() {
+		this.vm.selectedCrewmemberProperty().set("");
+		this.vm.applyFilter();
+		assertEquals(this.vm.masterTransactionListProperty().size(), this.vm.filteredTransactionsProperty().size());
     }
 
     @Test
     void testApplyFilterNoFiltersShowsAll() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.applyFilter();
         assertEquals(3, vm.filteredTransactionsProperty().size());
     }
 
     @Test
     void testApplyFilterStartDateOnly() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.startDateProperty().set(LocalDate.of(2024, 2, 1));
         vm.applyFilter();
         assertEquals(2, vm.filteredTransactionsProperty().size());
@@ -75,7 +96,6 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterEndDateOnly() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.endDateProperty().set(LocalDate.of(2024, 2, 20));
         vm.applyFilter();
         assertEquals(2, vm.filteredTransactionsProperty().size());
@@ -83,7 +103,6 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterDateRange() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.startDateProperty().set(LocalDate.of(2024, 2, 1));
         vm.endDateProperty().set(LocalDate.of(2024, 3, 1));
         vm.applyFilter();
@@ -92,7 +111,6 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterSpecialQualitiesSingleMatch() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.selectedSpecialQualitiesProperty().add(SpecialQualities.LIQUID);
         vm.applyFilter();
         assertEquals(1, vm.filteredTransactionsProperty().size());
@@ -100,7 +118,6 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterSpecialQualitiesMultipleRequired() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.selectedSpecialQualitiesProperty().add(SpecialQualities.FRAGILE);
         vm.selectedSpecialQualitiesProperty().add(SpecialQualities.EXPLOSIVE);
         vm.applyFilter();
@@ -109,7 +126,6 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterCrewMemberOnly() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
         vm.selectedCrewmemberProperty().set("Alice");
         vm.applyFilter();
         assertEquals(2, vm.filteredTransactionsProperty().size());
@@ -117,8 +133,7 @@ public class TestApplyFilter {
 
     @Test
     void testApplyFilterAllFiltersCombined() {
-        StockChangesVM vm = new StockChangesVM(this.ship);
-
+    	
         vm.startDateProperty().set(LocalDate.of(2024, 3, 1));
         vm.endDateProperty().set(LocalDate.of(2024, 3, 20));
 

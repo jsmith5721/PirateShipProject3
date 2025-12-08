@@ -1,10 +1,13 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.User;
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import edu.westga.cs3211.pirateship.model.Ship;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
@@ -27,10 +30,17 @@ public class AddContainerVM {
 	/**
 	 * Instantiates a new adds the container VM.
 	 *
-	 * @param ship the ship
+	 * @param currentUser the currently logged in user
 	 */
-	public AddContainerVM(Ship ship) {
-		this.ship = ship;
+	public AddContainerVM(User currentUser) {
+		try {
+			this.ship = ShipSerializer.loadShip();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		this.ship.setCurrentUser(currentUser);
+		
 		this.size = new SimpleIntegerProperty();
 
 		ArrayList<SpecialQualities> qualitiesList = new ArrayList<SpecialQualities>();
@@ -95,24 +105,27 @@ public class AddContainerVM {
 	 * @return the container's string representation or empty if failed
 	 */
 	public String addContainer() {
+		String result = "";
 		Container container = new Container(this.size.get(), this.selectedSpecialQualities.getValue());
 
 		try {
 			this.ship.addContainer(container);
-			//Debugging output
-			System.out.println("Container added VM Level: " + container.toString());
-			return container.toString();
+			result = container.toString();
 		} catch (IllegalArgumentException ex) {
 			ex.printStackTrace();
 		}
 
-		return "";
+		return result;
 	}
 
 	/**
-	 * Save data.
+	 * Save the ship data.
 	 */
 	public void saveData() {
-		this.ship.saveData();
+		try {
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }

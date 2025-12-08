@@ -68,13 +68,14 @@ public class LoginView {
 	                alert.showAndWait();
 				} else {
 					try {
-						this.viewModel.saveUsers();
+						this.viewModel.saveShip();
+						
 			            FXMLLoader loader = new FXMLLoader();
 			            loader.setLocation(LoginView.class.getResource("LandingPage.fxml"));
 			            loader.load();
 
 			            LandingPage controller = loader.getController();
-			            controller.setShip(this.viewModel.getShip());
+			            controller.startup(this.viewModel.getShip().getCurrentUser());
 
 			            Parent parent = loader.getRoot();
 			            Scene scene = new Scene(parent);

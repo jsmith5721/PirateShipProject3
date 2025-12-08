@@ -22,17 +22,16 @@ import edu.westga.cs3211.pirateship.model.Stock;
  * @version Fall 2025
  */
 public class CargoSerializer {
-    private static final String FILE_NAME = "cargo.txt";
-    
     /**
 	 * Serializes the given CargoHull to a file.
 	 * 
 	 * @param hull the CargoHull to serialize
+	 * @param file the file to serialize to
 	 * @throws IOException if an I/O error occurs
 	 */
-    public static void serializeCargoToFile(CargoHull hull) throws IOException {
+    public static void saveCargo(CargoHull hull, String file) throws IOException {
         String data = serializeHull(hull);
-        try (FileWriter out = new FileWriter(FILE_NAME)) {
+        try (FileWriter out = new FileWriter(file)) {
             out.write(data);
         }
     }
@@ -44,7 +43,7 @@ public class CargoSerializer {
 	 * @throws IOException if an I/O error occurs
 	 */
     public static CargoHull loadCargo() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(FILE_NAME));
+        List<String> lines = Files.readAllLines(Paths.get(ShipSerializer.CARGO_TXT_FILE));
         if (lines.isEmpty()) {
 			return null;
 		}

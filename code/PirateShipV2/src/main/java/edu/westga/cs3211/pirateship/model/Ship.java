@@ -1,12 +1,8 @@
 package edu.westga.cs3211.pirateship.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import edu.westga.cs3211.pirateship.model.serializers.CargoSerializer;
-import edu.westga.cs3211.pirateship.model.serializers.TransactionSerializer;
 
 /**
  * Models a pirate ship.
@@ -138,12 +134,10 @@ public class Ship {
 	 */
 	public void addContainer(Container container) {
 		if (container == null) {
-			System.out.println("Ship Level Null");
 			throw new IllegalArgumentException("Container cannot be null.");
 		}
 		try {
 			this.cargoHull.addContainer(container);
-			System.out.println("Container added Ship Level: " + container.toString());
 		} catch (IllegalArgumentException ex) {
 			throw ex;
 		}
@@ -166,22 +160,4 @@ public class Ship {
 			throw ex;
 		}
 	}
-	
-	/**
-	 * Save data.
-	 */
-	public void saveData() {
-		try {
-			CargoSerializer.serializeCargoToFile(this.getCargoHull());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		try {
-			TransactionSerializer.serializeTransactionHistoryToFile(this.getCargoHull());
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-	
 }

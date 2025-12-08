@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import edu.westga.cs3211.pirateship.Main;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.User;
@@ -17,18 +16,15 @@ import edu.westga.cs3211.pirateship.model.User;
  * @version Fall 2025
  */
 public class UserSerializer {
-	
-	/** The Constant FILE_PATH. */
-	private static final String FILE_PATH = "users.txt";
-
     /**
      * Save users.
      *
      * @param ship the ship
+     * @param file the file to save to
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static void saveUsers(Ship ship) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) {
+    public static void saveUsers(Ship ship, String file) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
 
             for (User user : ship.getCrew()) {
                 writer.println(
@@ -48,7 +44,7 @@ public class UserSerializer {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static void loadUsers(Ship ship) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ShipSerializer.USERS_TXT_FILE))) {
 			String line;
         	while ((line = reader.readLine()) != null) {
         		String[] userText = line.split(",", -1);
