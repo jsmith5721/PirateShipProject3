@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
@@ -29,6 +30,7 @@ public class StockChangesVM {
 	private ListProperty<SpecialQualities> selectedSpecialQualities;
 	private ListProperty<String> crewmemberList;
 	private ObjectProperty<String> selectedCrewmember;
+	private ObjectProperty<StockType> selectedStockType;
 	private ObjectProperty<LocalDate> startDate;
 	private ObjectProperty<LocalDate> endDate;
 
@@ -61,6 +63,8 @@ public class StockChangesVM {
 		}
 		this.crewmemberList = new SimpleListProperty<>(FXCollections.observableArrayList(names));
 		this.selectedCrewmember = new SimpleObjectProperty<>();
+		
+		this.selectedStockType = new SimpleObjectProperty<>();
 
 		this.startDate = new SimpleObjectProperty<>(null);
 		this.endDate = new SimpleObjectProperty<>(null);
@@ -119,6 +123,15 @@ public class StockChangesVM {
 	public ObjectProperty<String> selectedCrewmemberProperty() {
 		return this.selectedCrewmember;
 	}
+	
+	/**
+	 * Gets the stock type property.
+	 *
+	 * @return the stock type property
+	 */
+	public ObjectProperty<StockType> getStockTypeProperty() {
+		return this.selectedStockType;
+	}
 
 	/**
 	 * Start date property.
@@ -167,6 +180,10 @@ public class StockChangesVM {
 		if (this.selectedCrewmember.get() != null && !this.selectedCrewmember.get().isBlank()) {
 			result = this.filterForCrewMember(result);
 		}
+		
+		if (this.selectedStockType.get() != null) {
+			result = this.filterForStockType(result);
+		}
 
 		this.filteredTransactionList.set(FXCollections.observableArrayList(result));
 	}
@@ -180,6 +197,17 @@ public class StockChangesVM {
 			}
 		}
 		return crewFiltered;
+	}
+	
+	private ArrayList<Transaction> filterForStockType(ArrayList<Transaction> transactions) {
+		ArrayList<Transaction> typeFiltered = new ArrayList<>();
+
+		for (Transaction transaction : transactions) {
+			if (transaction.getStockType() == this.selectedStockType.get()) {
+				typeFiltered.add(transaction);
+			}
+		}
+		return typeFiltered;
 	}
 
 	private ArrayList<Transaction> filterForSpecialQualities(ArrayList<Transaction> transactions) {
@@ -242,4 +270,5 @@ public class StockChangesVM {
 			ex.printStackTrace();
 		}
 	}
+
 }

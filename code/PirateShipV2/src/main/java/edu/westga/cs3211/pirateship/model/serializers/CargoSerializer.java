@@ -14,6 +14,7 @@ import edu.westga.cs3211.pirateship.model.Conditions;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 
 /**
  * Serializer for CargoHull data.
@@ -74,6 +75,7 @@ public class CargoSerializer {
         block.append("CONTAINER ")
              .append(container.getContainerID()).append(" ")
              .append(container.getSize()).append(" ")
+             .append(container.getStockType().name()).append(" ")
              .append(joinQualities(container.getSpecialQualities()))
              .append("\n");
 
@@ -90,6 +92,7 @@ public class CargoSerializer {
         int qty = stock.getQuantity();
         int indivSize = stock.getTotalSize() / qty;
         String condition = stock.getCondition().name();
+        String stockType = stock.getStockType().name();
 
         String expiration;
         if (stock.getExpirationDate() == null) {
@@ -106,6 +109,7 @@ public class CargoSerializer {
                 + indivSize + " "
                 + condition + " "
                 + expiration + " "
+                + stockType + " "
                 + qualities;
 
         return line;
@@ -121,6 +125,7 @@ public class CargoSerializer {
 
         int id = 0;
         int size = 0;
+        StockType stockType = StockType.OTHER;
         Collection<SpecialQualities> qualities = new ArrayList<>();
         Collection<Stock> stocks = new ArrayList<>();
 
@@ -139,7 +144,7 @@ public class CargoSerializer {
             }
 
             if (line.equals("END-CONTAINER")) {
-                Container container = new Container(size, stocks, id, qualities);
+                Container container = new Container(size, stocks, id, qualities, stockType);
                 hull.addContainer(container);
                 reading = false;
                 continue;
@@ -150,13 +155,14 @@ public class CargoSerializer {
             }
 
             if (line.startsWith("CONTAINER")) {
-                String[] parts = line.split(" ", 4);
+                String[] parts = line.split(" ", 5);
 
                 id = Integer.parseInt(parts[1]);
                 size = Integer.parseInt(parts[2]);
+                stockType = StockType.valueOf(parts[3]);
 
-                if (parts.length > 3) {
-                    qualities = parseQualities(parts[3]);
+                if (parts.length > 4) {
+                    qualities = parseQualities(parts[4]);
                 } else {
                     qualities = new ArrayList<>();
                 }
@@ -172,7 +178,7 @@ public class CargoSerializer {
 
     private static Stock parseStock(String line) {
 
-        String[] parts = line.split(" ", 7);
+        String[] parts = line.split(" ", 8);
 
         String name = unsanitize(parts[1]);
         int qty = Integer.parseInt(parts[2]);
@@ -184,10 +190,12 @@ public class CargoSerializer {
         if (!expText.equals("null")) {
             expiration = LocalDate.parse(expText);
         }
+        
+        StockType stockType = StockType.valueOf(parts[6]);
 
         Collection<SpecialQualities> qualities;
-        if (parts.length > 6) {
-            qualities = parseQualities(parts[6]);
+        if (parts.length > 7) {
+            qualities = parseQualities(parts[7]);
         } else {
             qualities = new ArrayList<>();
         }
@@ -197,9 +205,9 @@ public class CargoSerializer {
         	if (expiration == null) {
 				throw new IllegalArgumentException("Parishable stock must have expiration date.");
 			}
-			stock = new Stock(name, qty, indivSize, qualities, condition, expiration);
+			stock = new Stock(name, qty, indivSize, qualities, condition, stockType, expiration);
 		} else {
-			stock = new Stock(name, qty, indivSize, qualities, condition);
+			stock = new Stock(name, qty, indivSize, qualities, condition, stockType);
 		}
 
         return stock;

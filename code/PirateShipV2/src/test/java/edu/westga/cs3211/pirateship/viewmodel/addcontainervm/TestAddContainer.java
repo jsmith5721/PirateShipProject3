@@ -3,6 +3,7 @@ package edu.westga.cs3211.pirateship.viewmodel.addcontainervm;
 import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ public class TestAddContainer {
         User currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
         AddContainerVM vm = new AddContainerVM(currentUser);
         vm.getSizeProperty().set(20);
+        vm.getStockTypeProperty().set(StockType.AMMUNITION);
         vm.updateSelectedQualities(List.of(SpecialQualities.EXPLOSIVE));
 
         String result = vm.addContainer();

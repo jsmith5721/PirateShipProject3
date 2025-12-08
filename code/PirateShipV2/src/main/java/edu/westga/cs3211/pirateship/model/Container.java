@@ -19,14 +19,16 @@ public class Container {
 	private Collection<SpecialQualities> specialQualities;
 	private String specialQualitiesString;
 	private int remainingCapacity;
+	private StockType stockType;
 
 	/**
 	 * Instantiates a new container from user input.
 	 *
 	 * @param size             the size
 	 * @param specialQualities the special qualities of the container
+	 * @param stockType        the stock type the container can hold
 	 */
-	public Container(int size, Collection<SpecialQualities> specialQualities) {
+	public Container(int size, Collection<SpecialQualities> specialQualities, StockType stockType) {
 		if (size <= 0) {
 			throw new IllegalArgumentException("Size must be greater than zero.");
 		}
@@ -35,6 +37,7 @@ public class Container {
 		this.stockItems = new ArrayList<Stock>();
 		this.containerID = idCounter++;
 		this.specialQualities = specialQualities;
+		this.stockType = stockType;
 		this.getSpecialQualitiesAsString();
 	}
 
@@ -45,8 +48,9 @@ public class Container {
 	 * @param stock            the stock items in the container
 	 * @param id               the container ID of the container
 	 * @param specialQualities the special qualities of the container
+	 * @param stockType        the stock type the container can hold
 	 */
-	public Container(int size, Collection<Stock> stock, int id, Collection<SpecialQualities> specialQualities) {
+	public Container(int size, Collection<Stock> stock, int id, Collection<SpecialQualities> specialQualities, StockType stockType) {
 		if (size <= 0) {
 			throw new IllegalArgumentException("Size must be greater than zero.");
 		}
@@ -67,6 +71,12 @@ public class Container {
 	    } else {
 	        this.specialQualities = specialQualities;
 	    }
+		
+		if (stockType == null) {
+			throw new IllegalArgumentException("Stock type cannot be null.");
+		} else {
+			this.stockType = stockType;
+		}
 	
 		this.getSpecialQualitiesAsString();
 		this.calculateRemainingCapacity();
@@ -106,6 +116,15 @@ public class Container {
 	 */
 	public Collection<SpecialQualities> getSpecialQualities() {
 		return this.specialQualities;
+	}
+	
+	/**
+	 * Gets the stock type.
+	 *
+	 * @return the stock type
+	 */
+	public StockType getStockType() {
+		return this.stockType;
 	}
 	
 	/**
@@ -161,7 +180,7 @@ public class Container {
 		if (this.remainingCapacity >= stock.getTotalSize()) {
 			this.stockItems.add(stock);
 			this.calculateRemainingCapacity();
-			transaction = new Transaction(new Date(), stock.getName(), stock.getQuantity(), crewmember,
+			transaction = new Transaction(new Date(), stock.getName(), stock.getQuantity(), crewmember, stock.getStockType(),
 					new ArrayList<SpecialQualities>(stock.getSpecialQualities()));
 		} else {
 			throw new IllegalArgumentException("Not enough remaining capacity in the container.");
@@ -217,7 +236,7 @@ public class Container {
 	 */
 	@Override
 	public String toString() {
-		return "Container ID: " + this.containerID + ", Remaining Capacity: " + this.remainingCapacity
+		return "Container ID: " + this.containerID + ", Remaining Capacity: " + this.remainingCapacity + ", Stock Type: " + this.stockType
 				+ ", Special Qualities: [" + this.specialQualitiesString + "]";
 	}
 
