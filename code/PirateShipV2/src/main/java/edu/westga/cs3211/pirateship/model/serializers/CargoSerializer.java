@@ -191,8 +191,18 @@ public class CargoSerializer {
         } else {
             qualities = new ArrayList<>();
         }
+        
+        Stock stock;
+        if (qualities.contains(SpecialQualities.PARISHABLE)) {
+        	if (expiration == null) {
+				throw new IllegalArgumentException("Parishable stock must have expiration date.");
+			}
+			stock = new Stock(name, qty, indivSize, qualities, condition, expiration);
+		} else {
+			stock = new Stock(name, qty, indivSize, qualities, condition);
+		}
 
-        return new Stock(name, qty, indivSize, qualities, condition, expiration);
+        return stock;
     }
 
     private static void updateContainerIdCounter(CargoHull hull) {
