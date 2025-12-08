@@ -1,14 +1,20 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import edu.westga.cs3211.pirateship.model.Ship;
+
+import java.io.IOException;
+
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.Stock;
 import edu.westga.cs3211.pirateship.model.StockType;
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 
 /**
  * ViewModel for the View Inventory page.
@@ -18,16 +24,41 @@ import edu.westga.cs3211.pirateship.model.StockType;
 public class ViewInventoryVM {
 
     private final ObservableList<Stock> stocks;
+	private final StringProperty welcomeMessageProperty;
     private Ship ship;
+    
+    
 
     public ViewInventoryVM(Ship ship) {
-        this.stocks = FXCollections.observableArrayList();
+        if (ship == null) {
+            throw new IllegalArgumentException("Ship cannot be null");
+        }
+
         this.ship = ship;
+        this.stocks = FXCollections.observableArrayList();
+
+        if (ship.getCurrentUser() != null) {
+            this.welcomeMessageProperty =
+                new SimpleStringProperty("Welcome, " + ship.getCurrentUser().getName());
+        } else {
+            this.welcomeMessageProperty =
+                new SimpleStringProperty("Welcome");
+        }
     }
+
 
     public ObservableList<Stock> getStocks() {
         return this.stocks;
     }
+    
+    /**
+	 * Welcome message property.
+	 *
+	 * @return the string property
+	 */
+	public StringProperty welcomeMessageProperty() {
+		return this.welcomeMessageProperty;
+	}
 
     /**
      * Populates the observable list with ALL stocks
@@ -83,6 +114,18 @@ public class ViewInventoryVM {
     
     public Ship getShip() {
 		return this.ship;
+	}
+    
+    /**
+	 * Save data.
+	 */
+	public void saveData() {
+		try {
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE,
+					ShipSerializer.TRANSACTION_TXT_FILE);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
 

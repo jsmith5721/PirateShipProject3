@@ -10,16 +10,29 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.Ship;
+import edu.westga.cs3211.pirateship.viewmodel.LandingPageVM;
 import edu.westga.cs3211.pirateship.viewmodel.ViewInventoryVM;
 
 import java.time.LocalDate;
 
 public class ViewInventoryView {
+	
+	@FXML
+    private Button logoutButton;
+	
+	@FXML
+	private Button removeButton;
+	
+	@FXML
+	private Button backButton;
 
 	@FXML
 	private TableView<Stock> stockTable;
@@ -38,10 +51,21 @@ public class ViewInventoryView {
 
 	@FXML
 	private TableColumn<Stock, LocalDate> expCol;
+	
+	@FXML
+    private Label welcomeLable;
 
 	private ViewInventoryVM viewModel;
 	
 	private Ship ship;
+	
+	@FXML
+	void initialize() {
+		assert this.welcomeLable != null : "fx:id=\"welcomeLable\" was not injected: check your FXML file 'ViewInventory.fxml'.";
+		assert this.logoutButton != null : "fx:id=\"logoutButton\" was not injected: check your FXML file 'ViewInventory.fxml'.";
+		
+		this.setUpListenerForLogoutButton();
+	}
 
 	/*
 	 * Sets the given ship as the current ship for the inventory
@@ -78,6 +102,9 @@ public class ViewInventoryView {
 	}
 	
 	private void bindViewModel() {
+        this.welcomeLable.textProperty().bind(this.viewModel.welcomeMessageProperty());
+
+		
 		this.nameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getName()));
 
 		this.qtyCol.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getQuantity()));
@@ -92,5 +119,33 @@ public class ViewInventoryView {
 		this.viewModel.loadEntireInventory(this.ship);
 
 		this.stockTable.setItems(this.viewModel.getStocks());
+	}
+	
+	/**
+     * Sets the up listener for logout button.
+     */
+    private void setUpListenerForLogoutButton() {
+		this.logoutButton.setOnAction((ActionEvent event) -> {
+			try {
+				this.viewModel.saveData();
+				
+	            FXMLLoader loader = new FXMLLoader();
+	            loader.setLocation(LandingPage.class.getResource("LoginView.fxml"));
+	            loader.load();
+
+	            Parent parent = loader.getRoot();
+	            Scene scene = new Scene(parent);
+
+	            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+	            stage.setScene(scene);
+	            stage.setTitle("Login");
+	            stage.show();
+
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            Alert alert = new Alert(Alert.AlertType.ERROR, "Error logging user out.");
+	            alert.showAndWait();
+	        }
+		});
 	}
 }
