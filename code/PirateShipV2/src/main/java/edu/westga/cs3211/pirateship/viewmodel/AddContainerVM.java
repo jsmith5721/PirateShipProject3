@@ -6,13 +6,16 @@ import java.util.List;
 
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import edu.westga.cs3211.pirateship.model.Ship;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 
 /**
@@ -26,6 +29,7 @@ public class AddContainerVM {
 	private IntegerProperty size;
 	private ListProperty<SpecialQualities> specialQualitiesList;
 	private ListProperty<SpecialQualities> selectedSpecialQualities;
+	private ObjectProperty<StockType> stockType;
 
 	/**
 	 * Instantiates a new adds the container VM.
@@ -42,6 +46,7 @@ public class AddContainerVM {
 		this.ship.setCurrentUser(currentUser);
 		
 		this.size = new SimpleIntegerProperty();
+		this.stockType = new SimpleObjectProperty<>();
 
 		ArrayList<SpecialQualities> qualitiesList = new ArrayList<SpecialQualities>();
 		qualitiesList.add(SpecialQualities.PARISHABLE);
@@ -70,6 +75,15 @@ public class AddContainerVM {
 	 */
 	public IntegerProperty getSizeProperty() {
 		return this.size;
+	}
+	
+	/**
+	 * Gets the stock type property.
+	 *
+	 * @return the stock type property
+	 */
+	public ObjectProperty<StockType> getStockTypeProperty() {
+		return this.stockType;
 	}
 
 	/**
@@ -106,7 +120,7 @@ public class AddContainerVM {
 	 */
 	public String addContainer() {
 		String result = "";
-		Container container = new Container(this.size.get(), this.selectedSpecialQualities.getValue());
+		Container container = new Container(this.size.get(), this.selectedSpecialQualities.getValue(), this.stockType.get());
 
 		try {
 			this.ship.addContainer(container);

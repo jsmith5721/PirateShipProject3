@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.Conditions;
 
@@ -28,7 +29,7 @@ public class TestAddStock {
 	@Test
     public void testAddStockThrowsForNullName() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -46,7 +47,7 @@ public class TestAddStock {
 	@Test
     public void testAddStockThrowsForBlankName() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -64,7 +65,7 @@ public class TestAddStock {
     @Test
     public void testAddStockThrowsForInvalidSize() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -82,7 +83,7 @@ public class TestAddStock {
     @Test
     public void testAddStockThrowsForInvalidQuantity() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -98,7 +99,7 @@ public class TestAddStock {
     @Test
     public void testAddStockThrowsForNullCondition() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -127,7 +128,7 @@ public class TestAddStock {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.PARISHABLE);
 
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -143,7 +144,7 @@ public class TestAddStock {
     
     @Test
     public void testAddStockNoSpecialQualities() {
-    	Container container = new Container(100, new ArrayList<>());
+    	Container container = new Container(100, new ArrayList<>(), StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -159,7 +160,7 @@ public class TestAddStock {
     
     @Test
     public void testAddStockNonPerishableWithQualities() {
-    	Container container = new Container(100, new ArrayList<>());
+    	Container container = new Container(100, new ArrayList<>(), StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -179,7 +180,7 @@ public class TestAddStock {
     
     @Test
     public void testAddStockPerishableMissingExpiration() {
-    	Container container = new Container(100, new ArrayList<>());
+    	Container container = new Container(100, new ArrayList<>(), StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -198,7 +199,7 @@ public class TestAddStock {
 
     @Test
     public void testAddStockPerishableValid() {
-    	Container container = new Container(100, new ArrayList<>());
+    	Container container = new Container(100, new ArrayList<>(), StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -221,7 +222,7 @@ public class TestAddStock {
     @Test
     public void testAddStockSuccessNonPerishable() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -241,7 +242,7 @@ public class TestAddStock {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.FRAGILE);
         qualities.add(SpecialQualities.VALUABLE);
-        Container container = new Container(200, qualities);
+        Container container = new Container(200, qualities, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);
@@ -261,7 +262,7 @@ public class TestAddStock {
     public void testAddStockSuccessPerishable() {
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.PARISHABLE);
-        Container container = new Container(200, qualities);
+        Container container = new Container(200, qualities, StockType.FOOD);
 
         AddStockVM vm = new AddStockVM(this.currentUser);
         vm.getShip().addContainer(container);

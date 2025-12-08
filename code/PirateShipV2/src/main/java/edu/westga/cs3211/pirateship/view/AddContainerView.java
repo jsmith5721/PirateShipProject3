@@ -1,9 +1,10 @@
 package edu.westga.cs3211.pirateship.view;
 
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
-
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
@@ -33,6 +35,8 @@ public class AddContainerView {
 	@FXML
 	private Button logoutButton;
 	@FXML
+	private ComboBox<StockType> stockTypeComboBox;
+	@FXML
 	private ListView<SpecialQualities> specialQualsListView;
 	private AddContainerVM viewModel;
 
@@ -46,6 +50,7 @@ public class AddContainerView {
 		assert this.homeButton != null : "fx:id=\"homeButton\" was not injected.";
 		assert this.logoutButton != null : "fx:id=\"logoutButton\" was not injected.";
 		assert this.specialQualsListView != null : "fx:id=\"specialQualsListView\" was not injected.";
+		assert this.stockTypeComboBox != null : "fx:id=\"stockTypeComboBox\" was not injected: check your FXML file 'AddContainerView.fxml'.";
 	}
 
 	/**
@@ -65,6 +70,10 @@ public class AddContainerView {
 
 		this.containerSizeText.textProperty().bindBidirectional(this.viewModel.getSizeProperty(),
 				new javafx.util.converter.NumberStringConverter());
+		
+		this.stockTypeComboBox.itemsProperty().bind(Bindings
+				.createObjectBinding(() -> javafx.collections.FXCollections.observableArrayList(StockType.values())));
+		this.stockTypeComboBox.valueProperty().bindBidirectional(this.viewModel.getStockTypeProperty());
 
 		this.specialQualsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		this.specialQualsListView.itemsProperty().bind(this.viewModel.getSpecialQualityProperty());

@@ -3,6 +3,7 @@ package edu.westga.cs3211.pirateship.view;
 import edu.westga.cs3211.pirateship.model.Conditions;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.AddStockVM;
 
@@ -51,6 +52,8 @@ public class AddStockView {
 	@FXML
 	private TextField sizeText;
 	@FXML
+	private ComboBox<StockType> stockTypeComboBox;
+	@FXML
 	private ListView<SpecialQualities> specialQualsListView;
 	@FXML
 	private TextField quantityText;
@@ -61,7 +64,18 @@ public class AddStockView {
 	 */
 	@FXML
 	void initialize() {
-		assert this.availableContainersListView != null : "fx:id=\"availableContainersListView\" was not injected.";
+		assert this.addStockButton != null : "fx:id=\"addStockButton\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.availableContainersListView != null : "fx:id=\"availableContainersListView\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.conditionComboBox != null : "fx:id=\"conditionComboBox\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.expirationDatePicker != null : "fx:id=\"expirationDatePicker\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.expirationLabel != null : "fx:id=\"expirationLabel\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.homeButton != null : "fx:id=\"homeButton\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.logoutButton != null : "fx:id=\"logoutButton\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.nameText != null : "fx:id=\"nameText\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.quantityText != null : "fx:id=\"quantityText\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.sizeText != null : "fx:id=\"sizeText\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.specialQualsListView != null : "fx:id=\"specialQualsListView\" was not injected: check your FXML file 'AddStockView.fxml'.";
+        assert this.stockTypeComboBox != null : "fx:id=\"stockTypeComboBox\" was not injected: check your FXML file 'AddStockView.fxml'.";
 	}
 
 	/**
@@ -86,6 +100,10 @@ public class AddStockView {
 		this.conditionComboBox.itemsProperty().bind(Bindings
 				.createObjectBinding(() -> javafx.collections.FXCollections.observableArrayList(Conditions.values())));
 		this.conditionComboBox.valueProperty().bindBidirectional(this.viewModel.getConditionProperty());
+		
+		this.stockTypeComboBox.itemsProperty().bind(Bindings
+				.createObjectBinding(() -> javafx.collections.FXCollections.observableArrayList(StockType.values())));
+		this.stockTypeComboBox.valueProperty().bindBidirectional(this.viewModel.getStockTypeProperty());
 
 		this.expirationDatePicker.valueProperty().bindBidirectional(this.viewModel.getExpirationDateProperty());
 		this.expirationLabel.visibleProperty().bind(this.viewModel.showExpirationProperty());
@@ -98,6 +116,10 @@ public class AddStockView {
 
 		this.specialQualsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
 			this.viewModel.updateSelectedQualities(this.specialQualsListView.getSelectionModel().getSelectedItems());
+		});
+		
+		this.stockTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+			this.viewModel.updateSelectedStockType(newVal);
 		});
 
 		this.availableContainersListView.itemsProperty().bind(this.viewModel.getContainerListProperty());

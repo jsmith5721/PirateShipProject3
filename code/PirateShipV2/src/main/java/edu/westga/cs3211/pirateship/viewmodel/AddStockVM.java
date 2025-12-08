@@ -10,6 +10,7 @@ import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.binding.BooleanBinding;
@@ -45,6 +46,7 @@ public class AddStockVM {
 	private ListProperty<Container> filteredContainerList;
 	private ObjectProperty<Container> selectedContainer;
 	private BooleanProperty showExpiration;
+	private ObjectProperty<StockType> stockType;
 
 	/**
 	 * Instantiates a new AddStockVM.
@@ -64,6 +66,7 @@ public class AddStockVM {
 		this.size = new SimpleIntegerProperty();
 		this.quantity = new SimpleIntegerProperty(1);
 		this.condition = new SimpleObjectProperty<>();
+		this.stockType = new SimpleObjectProperty<>();
 		this.expirationDate = new SimpleObjectProperty<>();
 
 		ArrayList<SpecialQualities> qualitiesList = new ArrayList<>();
@@ -131,6 +134,15 @@ public class AddStockVM {
 	 */
 	public ObjectProperty<Conditions> getConditionProperty() {
 		return this.condition;
+	}
+	
+	/**
+	 * Gets the stock type property.
+	 *
+	 * @return the stock type property
+	 */
+	public ObjectProperty<StockType> getStockTypeProperty() {
+		return this.stockType;
 	}
 
 	/**
@@ -208,6 +220,19 @@ public class AddStockVM {
 		this.selectedSpecialQualities.set(FXCollections.observableArrayList(selected));
 		this.applyContainerFilter();
 	}
+	
+	/**
+	 * Update selected stock type.
+	 *
+	 * @param selectedType the selected type
+	 */
+	public void updateSelectedStockType(StockType selectedType) {
+		if (selectedType == null) {
+			throw new NullPointerException("Selected stock type cannot be null.");
+		}
+		this.stockType.set(selectedType);
+		this.applyContainerFilter();
+	}
 
 	/**
 	 * Apply container filter.
@@ -215,19 +240,42 @@ public class AddStockVM {
 	private void applyContainerFilter() {
 		this.masterContainerList.setAll(this.ship.getContainers());
 		this.filteredContainerList.clear();
-
+		
+		StockType selectedType = this.stockType.get();
 		List<SpecialQualities> selected = this.selectedSpecialQualities.get();
+		ArrayList<Container> result = new ArrayList<>();
+		
+		result = this.filterStockType(this.masterContainerList, selectedType);
+		result = this.filterSpecialQualities(result, selected);
+		this.filteredContainerList.addAll(result);
+	}
 
-		if (selected.isEmpty()) {
-			this.filteredContainerList.addAll(this.masterContainerList);
-			return;
+	private ArrayList<Container> filterSpecialQualities(List<Container> containerList, List<SpecialQualities> selected) {
+		ArrayList<Container> result = new ArrayList<>();
+		if (selected == null || selected.isEmpty()) {
+			result.addAll(containerList);
+			return result;
 		}
-
-		for (Container container : this.masterContainerList) {
+		for (Container container : containerList) {
 			if (container.getSpecialQualities().containsAll(selected)) {
-				this.filteredContainerList.add(container);
+				result.add(container);
 			}
 		}
+		return result;
+	}
+
+	private ArrayList<Container> filterStockType(List<Container> containerList, StockType selectedType) {
+		ArrayList<Container> result = new ArrayList<>();
+		if (selectedType == null) {
+			result.addAll(containerList);
+			return result;
+		}
+		for (Container container : containerList) {
+			if (container.getStockType() == selectedType) {
+				result.add(container);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -248,6 +296,9 @@ public class AddStockVM {
 		if (this.condition.get() == null) {
 			throw new IllegalArgumentException("Condition must be selected.");
 		}
+		if (this.stockType.get() == null) {
+			throw new IllegalArgumentException("Stock type must be selected.");
+		}
 		if (this.selectedContainer.get() == null) {
 			throw new IllegalArgumentException("A container must be selected.");
 		}
@@ -262,13 +313,13 @@ public class AddStockVM {
 				throw new IllegalArgumentException("Expiration date must be selected.");
 			}
 			stock = new Stock(this.name.get(), this.quantity.get(), this.size.get(),
-					qualities, this.condition.get(), this.expirationDate.get());
+					qualities, this.condition.get(), this.stockType.get(), this.expirationDate.get());
 		} else if (!qualities.isEmpty()) {
 			stock = new Stock(this.name.get(), this.quantity.get(), this.size.get(),
-					qualities, this.condition.get());
+					qualities, this.condition.get(), this.stockType.get());
 		} else {
 			stock = new Stock(this.name.get(), this.quantity.get(), this.size.get(),
-					this.condition.get());
+					this.condition.get(), this.stockType.get());
 		}
 		
 		this.ship.addStockToContainer(this.selectedContainer.get().getContainerID(), stock);

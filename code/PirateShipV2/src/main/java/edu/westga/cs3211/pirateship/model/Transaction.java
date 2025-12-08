@@ -15,6 +15,7 @@ public class Transaction {
 	private String stockName;
 	private int quantity;
 	private User crewmember;
+	private StockType stockType;
 	private Collection<SpecialQualities> specialQualities;
 	private String specialQualitiesString;
 
@@ -25,15 +26,17 @@ public class Transaction {
 	 * @param stockName        the name of the stock that was transacted.
 	 * @param quantity         the quantity of stock that was transacted.
 	 * @param crewmember       the crewmember who performed the transaction.
+	 * @param stockType        the type of the stock that was transacted.
 	 * @param specialQualities the special qualities of the stock that was
 	 *                         transacted.
 	 */
-	public Transaction(Date date, String stockName, int quantity, User crewmember,
+	public Transaction(Date date, String stockName, int quantity, User crewmember, StockType stockType,
 			ArrayList<SpecialQualities> specialQualities) {
 		this.date = date;
 		this.stockName = stockName;
 		this.quantity = quantity;
 		this.crewmember = crewmember;
+		this.stockType = stockType;
 		this.specialQualities = specialQualities;
 		this.specialQualitiesString = "";
 		for (SpecialQualities quality : specialQualities) {
@@ -76,6 +79,15 @@ public class Transaction {
 	public User getCrewmember() {
 		return this.crewmember;
 	}
+	
+	/**
+	 * Gets the type of the stock that was transacted.
+	 *
+	 * @return the type of the stock that was transacted.
+	 */
+	public StockType getStockType() {
+		return this.stockType;
+	}
 
 	/**
 	 * Gets the special qualities of the stock that was transacted.
@@ -98,7 +110,7 @@ public class Transaction {
 	@Override
 	public String toString() {
 		return "Date: " + this.date + ", Stock Name: " + this.stockName + ", Quantity: " + this.quantity
-				+ ", Crewmember: " + this.crewmember.getUsername() + ", Special Qualities: "
+				+ ", Crewmember: " + this.crewmember.getUsername() + ", Stock Type: " + this.stockType.name() + ", Special Qualities: "
 				+ this.specialQualitiesString;
 	}
 }

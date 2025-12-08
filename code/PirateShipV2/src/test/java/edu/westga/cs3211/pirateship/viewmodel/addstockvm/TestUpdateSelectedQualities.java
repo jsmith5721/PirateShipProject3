@@ -2,6 +2,7 @@ package edu.westga.cs3211.pirateship.viewmodel.addstockvm;
 
 import edu.westga.cs3211.pirateship.viewmodel.AddStockVM;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
@@ -63,8 +64,8 @@ public class TestUpdateSelectedQualities {
         q2.add(SpecialQualities.EXPLOSIVE);
         q2.add(SpecialQualities.FRAGILE);
 
-        Container c1 = new Container(100, q1);
-        Container c2 = new Container(100, q2);
+        Container c1 = new Container(100, q1, StockType.OTHER);
+        Container c2 = new Container(100, q2, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(currentUser);
         vm.getShip().addContainer(c1);

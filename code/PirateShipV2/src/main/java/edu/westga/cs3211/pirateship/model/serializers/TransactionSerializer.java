@@ -12,6 +12,7 @@ import java.util.List;
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 
@@ -73,6 +74,7 @@ public class TransactionSerializer {
 		block.append("QUANTITY ").append(transaction.getQuantity()).append("\n");
 
 		appendCrew(block, transaction.getCrewmember());
+		block.append("STOCKTYPE ").append(transaction.getStockType().name()).append("\n");
 		appendQualities(block, transaction.getSpecialQualities());
 
 		block.append("END-TRANSACTION");
@@ -107,6 +109,7 @@ public class TransactionSerializer {
 		String name = "";
 		int qty = 0;
 		User crew = null;
+		StockType stockType = null;
 		ArrayList<SpecialQualities> qualities = new ArrayList<>();
 
 		for (String raw : lines) {
@@ -121,7 +124,7 @@ public class TransactionSerializer {
 
 			if (line.equals("END-TRANSACTION")) {
 				Date date = new Date(millis);
-				Transaction transaction = new Transaction(date, name, qty, crew, qualities);
+				Transaction transaction = new Transaction(date, name, qty, crew, stockType, qualities);
 				result.add(transaction);
 				reading = false;
 				continue;
@@ -141,6 +144,9 @@ public class TransactionSerializer {
 				qty = Integer.parseInt(line.split(" ")[1]);
 			} else if (line.startsWith("CREWMEMBER")) {
 				crew = parseUser(line);
+			} else if (line.startsWith("STOCKTYPE")) {
+				String[] parts = line.split(" ");
+				stockType = StockType.valueOf(parts[1]);
 			} else if (line.startsWith("QUALITIES")) {
 				qualities = parseQualitiesList(line);
 			}
