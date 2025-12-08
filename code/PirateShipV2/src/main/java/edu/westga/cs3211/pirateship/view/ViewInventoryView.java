@@ -53,28 +53,36 @@ public class ViewInventoryView {
 	}
 
 	/*
-	 * Sets the scene to show the landing page once more
+	 * Sets the scene back to the landing page
 	 */
 	public void returnToLandingPage(ActionEvent event) {
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(LandingPage.class.getResource("LandingPage.fxml"));
-			loader.load();
-			LandingPage landingPageController = loader.getController();
-			landingPageController.startup(this.ship.getCurrentUser());
-			
-			Parent root = loader.getRoot();
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        Scene scene = new Scene(root);
-	        stage.setScene(scene);
-	        stage.setTitle("Flying Dutchman - Home");
-	        stage.show();
+			SceneManager.previousScene();
+//			FXMLLoader loader = new FXMLLoader();
+//			loader.setLocation(LandingPage.class.getResource("LandingPage.fxml"));
+//			loader.load();
+//			LandingPage landingPageController = loader.getController();
+//			landingPageController.startup(this.ship.getCurrentUser());
+//			
+//			Parent root = loader.getRoot();
+//	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//	        Scene scene = new Scene(root);
+//	        stage.setScene(scene);
+//	        stage.setTitle("Flying Dutchman - Home");
+//	        stage.show();
 
         } catch (Exception ex) {
             ex.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Landing Page.");
             alert.showAndWait();
         }
+	}
+	
+	public void removeSelectedStock() {
+		var selectionModel = this.stockTable.getSelectionModel();
+		var selectedStock = selectionModel.getSelectedItems();
+		
+		this.viewModel.removeStock(selectedStock);
 	}
 	
 	private void bindViewModel() {

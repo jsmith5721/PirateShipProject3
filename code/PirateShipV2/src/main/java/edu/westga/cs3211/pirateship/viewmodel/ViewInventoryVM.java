@@ -29,6 +29,22 @@ public class ViewInventoryVM {
         return this.stocks;
     }
 
+    public void removeStock(Iterable<Stock> stockToRemove) {
+    	var shipHull = this.ship.getCargoHull();
+    	var user = this.ship.getCurrentUser();
+    	
+    	for (var stock : stockToRemove)
+    	{
+    		var containerId = shipHull.getContainerIdStoringStock(stock);
+    		if (containerId != -1)
+    		{
+    			shipHull.removeStockFromContainer(stock, containerId, user);
+    		}
+    		
+    		this.stocks.remove(stock);
+    	}
+    }
+    
     /**
      * Populates the observable list with ALL stocks
      * from every container in the ship's cargo hull.

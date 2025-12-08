@@ -92,9 +92,10 @@ public class LandingPage {
 	            Scene scene = new Scene(parent);
 
 	            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
-	            stage.setScene(scene);
-	            stage.setTitle("Add Stock");
-	            stage.show();
+	            SceneManager.moveToScene(scene, "Add Stock");
+//	            stage.setScene(scene);
+//	            stage.setTitle("Add Stock");
+//	            stage.show();
 
 	        } catch (Exception ex) {
 	            ex.printStackTrace();

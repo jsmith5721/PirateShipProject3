@@ -32,7 +32,7 @@
         <Insets bottom="10" left="10" right="10" top="10" />
     </padding>
 
-            <Button fx:id="removeBtn" text="Remove Stock" />
+            <Button fx:id="removeBtn" onAction="#removeSelectedStock" text="Remove Stock" />
             <Button fx:id="backBtn" onAction="#returnToLandingPage" text="Back" />
         </HBox>
     </bottom>

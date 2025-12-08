@@ -131,5 +131,34 @@ public class CargoHull {
 			throw new IllegalArgumentException(ex.getMessage());
 		}
 	}
+	
+	public int getContainerIdStoringStock(Stock stock) {
+		int storedContainerId = -1;
+		
+		for (var container : this.containers) {
+			if (container.contains(stock)) {
+				storedContainerId = container.getContainerID();
+				break;
+			}
+		}
+		
+		return storedContainerId;
+	}
+	
+	public void removeStockFromContainer(Stock stock, int containerId, User crewMember) {
+		if (stock == null) {
+			throw new IllegalArgumentException("Stock cannot be null.");
+		}
+		if (crewMember == null) {
+			throw new IllegalArgumentException("Crewmember cannot be null.");
+		}
+		Container container = this.getContainerById(containerId);
+		if (container == null) {
+			throw new IllegalArgumentException("Container with ID " + containerId + " not found.");
+		}
+
+		Transaction transcation = container.removeStockItem(stock, crewMember);
+		this.transactionHistory.add(transcation);
+	}
 
 }

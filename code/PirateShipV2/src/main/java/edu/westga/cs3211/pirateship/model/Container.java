@@ -187,6 +187,21 @@ public class Container {
 		}
 		return transaction;
 	}
+	
+	
+	/*
+	 * Removes the stock item from the container
+	 */
+	public Transaction removeStockItem(Stock stock, User crewMember) {
+		this.stockItems.remove(stock);
+		this.calculateRemainingCapacity();
+		var removedAmount = stock.getQuantity() * -1;
+		var specialQualities = new ArrayList<SpecialQualities>(stock.getSpecialQualities());
+		
+		var removal = new Transaction(new Date(), stock.getName(), removedAmount, crewMember, stock.getStockType(), specialQualities);
+		
+		return removal;
+	}
 
 	/**
 	 * Gets the current load of the container.
@@ -238,6 +253,14 @@ public class Container {
 	public String toString() {
 		return "Container ID: " + this.containerID + ", Remaining Capacity: " + this.remainingCapacity + ", Stock Type: " + this.stockType
 				+ ", Special Qualities: [" + this.specialQualitiesString + "]";
+	}
+	
+	public boolean contains(Stock stock)
+	{
+		if (!(stock instanceof Stock)) {
+			throw new IllegalArgumentException("stock must be an instance of Stock");
+		}
+		return this.stockItems.contains(stock);
 	}
 
 }
