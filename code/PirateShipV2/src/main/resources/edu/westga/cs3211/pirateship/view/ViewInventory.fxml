@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3211.pirateship.view.ViewInventoryView">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3211.pirateship.view.ViewInventoryView">
 
     <top>
         <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="View Inventory" BorderPane.alignment="CENTER" />
@@ -33,7 +33,7 @@
     </padding>
 
             <Button fx:id="removeBtn" text="Remove Stock" />
-            <Button fx:id="backBtn" text="Back" />
+            <Button fx:id="backBtn" onAction="#returnToLandingPage" text="Back" />
         </HBox>
     </bottom>
 

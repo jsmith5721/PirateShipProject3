@@ -6,7 +6,9 @@ import javafx.collections.ObservableList;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Container;
+import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 
 /**
  * ViewModel for the View Inventory page.
@@ -31,7 +33,7 @@ public class ViewInventoryVM {
      * Populates the observable list with ALL stocks
      * from every container in the ship's cargo hull.
      *
-     * No filtering — filtering is handled by teammates.
+     * The visible stock is determined by the role of the currently logged-in user
      */
     public void loadEntireInventory(Ship ship) {
         this.stocks.clear();
@@ -39,8 +41,10 @@ public class ViewInventoryVM {
         if (ship == null) {
             return;
         }
-
-        CargoHull cargoHull = ship.getCargoHull();   // adjust name if needed
+        
+        Roles currentUserRole = ship.getCurrentUser().getRole();
+        CargoHull cargoHull = ship.getCargoHull();
+        
         if (cargoHull == null || cargoHull.getContainers() == null) {
             return;
         }
@@ -49,8 +53,32 @@ public class ViewInventoryVM {
             if (container.getStockItems() == null) {
                 continue;
             }
-            this.stocks.addAll(container.getStockItems());
+            StockType containerType = container.getStockType();
+            if (this.roleCanSeeStockType(currentUserRole, containerType)) {
+            	this.stocks.addAll(container.getStockItems());
+            }
         }
+    }
+    
+    private boolean roleCanSeeStockType(Roles role, StockType stockType) {
+    	if (!(role instanceof Roles)) {
+    		throw new IllegalArgumentException("role must be from the Roles Enum");
+    	}
+    	if (!(stockType instanceof StockType)) {
+    		throw new IllegalArgumentException("stockType must be from the StockType Enum");
+    	}
+    	
+    	if (role == Roles.QUARTERMASTER)
+    	{
+    		return true;
+    	}
+    	if (role == Roles.COOK && stockType == StockType.FOOD) {
+    		return true;
+    	}
+    	else if (role == Roles.OFFICER && stockType == StockType.AMMUNITION) {
+    		return true;
+    	}
+    	return false;
     }
     
     public Ship getShip() {
