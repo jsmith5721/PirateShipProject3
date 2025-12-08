@@ -16,54 +16,55 @@ import org.junit.jupiter.api.Test;
 import edu.westga.cs3211.pirateship.model.Conditions;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 
 public class TestConstructor {
 	@Test
     void testBasicConstructorThrowsWhenNameNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock(null, 1, 1, Conditions.GOOD);
+            new Stock(null, 1, 1, Conditions.GOOD, StockType.OTHER);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenNameBlank() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("   ", 1, 1, Conditions.GOOD);
+            new Stock("   ", 1, 1, Conditions.GOOD, StockType.OTHER);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenConditionNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, null);
+            new Stock("Fish", 1, 1, null, StockType.FOOD);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenQuantityZero() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 0, 1, Conditions.GOOD);
+            new Stock("Fish", 0, 1, Conditions.GOOD, StockType.FOOD);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenQuantityNegative() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", -1, 1, Conditions.GOOD);
+            new Stock("Fish", -1, 1, Conditions.GOOD, StockType.FOOD);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenSizeZero() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 0, Conditions.GOOD);
+            new Stock("Fish", 1, 0, Conditions.GOOD, StockType.FOOD);
         });
     }
 
     @Test
     void testBasicConstructorThrowsWhenSizeNegative() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, -2, Conditions.GOOD);
+            new Stock("Fish", 1, -2, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -71,7 +72,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenNameNull() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock(null, 1, 1, quals, Conditions.GOOD);
+            new Stock(null, 1, 1, quals, Conditions.GOOD, StockType.OTHER);
         });
     }
 
@@ -79,14 +80,14 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenNameBlank() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock(" ", 1, 1, quals, Conditions.GOOD);
+            new Stock(" ", 1, 1, quals, Conditions.GOOD, StockType.OTHER);
         });
     }
 
     @Test
     void testQualitiesConstructorThrowsWhenSpecialQualitiesNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, null, Conditions.GOOD);
+            new Stock("Fish", 1, 1, null, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -94,7 +95,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenConditionNull() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, quals, null);
+            new Stock("Fish", 1, 1, quals, null, StockType.FOOD);
         });
     }
 
@@ -102,7 +103,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenQuantityZero() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 0, 1, quals, Conditions.GOOD);
+            new Stock("Fish", 0, 1, quals, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -110,7 +111,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenQuantityNegative() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", -5, 1, quals, Conditions.GOOD);
+            new Stock("Fish", -5, 1, quals, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -118,7 +119,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenSizeZero() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 0, quals, Conditions.GOOD);
+            new Stock("Fish", 1, 0, quals, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -126,7 +127,7 @@ public class TestConstructor {
     void testQualitiesConstructorThrowsWhenSizeNegative() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, -2, quals, Conditions.GOOD);
+            new Stock("Fish", 1, -2, quals, Conditions.GOOD, StockType.FOOD);
         });
     }
 
@@ -134,7 +135,7 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenNameNull() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock(null, 1, 1, quals, Conditions.GOOD, LocalDate.now().plusDays(1));
+            new Stock(null, 1, 1, quals, Conditions.GOOD, StockType.OTHER, LocalDate.now().plusDays(1));
         });
     }
 
@@ -142,14 +143,14 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenNameBlank() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock(" ", 1, 1, quals, Conditions.GOOD, LocalDate.now().plusDays(1));
+            new Stock(" ", 1, 1, quals, Conditions.GOOD, StockType.OTHER, LocalDate.now().plusDays(1));
         });
     }
 
     @Test
     void testExpirationConstructorThrowsWhenSpecialQualitiesNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, null, Conditions.GOOD, LocalDate.now().plusDays(1));
+            new Stock("Fish", 1, 1, null, Conditions.GOOD, StockType.FOOD, LocalDate.now().plusDays(1));
         });
     }
 
@@ -157,7 +158,7 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenConditionNull() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, quals, null, LocalDate.now().plusDays(1));
+            new Stock("Fish", 1, 1, quals, null, StockType.FOOD, LocalDate.now().plusDays(1));
         });
     }
 
@@ -165,7 +166,7 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenExpirationNull() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, quals, Conditions.GOOD, null);
+            new Stock("Fish", 1, 1, quals, Conditions.GOOD, StockType.FOOD, null);
         });
     }
 
@@ -175,7 +176,7 @@ public class TestConstructor {
         LocalDate past = LocalDate.now().minusDays(1);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 1, quals, Conditions.GOOD, past);
+            new Stock("Fish", 1, 1, quals, Conditions.GOOD, StockType.FOOD, past);
         });
     }
 
@@ -183,7 +184,7 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenQuantityZero() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 0, 1, quals, Conditions.GOOD, LocalDate.now().plusDays(1));
+            new Stock("Fish", 0, 1, quals, Conditions.GOOD, StockType.FOOD, LocalDate.now().plusDays(1));
         });
     }
 
@@ -191,13 +192,37 @@ public class TestConstructor {
     void testExpirationConstructorThrowsWhenSizeZero() {
         Collection<SpecialQualities> quals = new ArrayList<>();
         assertThrows(IllegalArgumentException.class, () -> {
-            new Stock("Fish", 1, 0, quals, Conditions.GOOD, LocalDate.now().plusDays(1));
+            new Stock("Fish", 1, 0, quals, Conditions.GOOD, StockType.FOOD, LocalDate.now().plusDays(1));
         });
     }
+    
+    @Test
+    void testNoQualitiesConstructorWithNullStockTypeThrows() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Stock("Fish", 1, 1, Conditions.GOOD, null);
+		});
+	}
+    
+    @Test
+    void testQualitiesConstructorWithNullStockTypeThrows() {
+		Collection<SpecialQualities> quals = new ArrayList<>();
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Stock("Fish", 1, 1, quals, Conditions.GOOD, null);
+		});
+		}
+	
+	@Test
+	void testExpirationConstructorWithNullStockTypeThrows() {
+		Collection<SpecialQualities> quals = new ArrayList<>();
+		quals.add(SpecialQualities.PARISHABLE);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Stock("Fish", 1, 1, quals, Conditions.GOOD, null, LocalDate.now().plusDays(1));
+		});
+	}
 	
 	@Test
     void testBasicConstructorInitializesFieldsCorrectly() {
-        Stock stock = new Stock("Fish", 2, 3, Conditions.GOOD);
+        Stock stock = new Stock("Fish", 2, 3, Conditions.GOOD, StockType.FOOD);
 
         assertEquals("Fish", stock.getName());
         assertEquals(2, stock.getQuantity());
@@ -205,6 +230,7 @@ public class TestConstructor {
         assertEquals(Conditions.GOOD, stock.getCondition());
         assertNotNull(stock.getSpecialQualities());
         assertTrue(stock.getSpecialQualities().isEmpty());
+        assertEquals(StockType.FOOD, stock.getStockType());
         assertNull(stock.getExpirationDate());
     }
 	
@@ -214,13 +240,14 @@ public class TestConstructor {
         qualities.add(SpecialQualities.FRAGILE);
         qualities.add(SpecialQualities.VALUABLE);
 
-        Stock stock = new Stock("Gold", 5, 2, qualities, Conditions.NEW);
+        Stock stock = new Stock("Gold", 5, 2, qualities, Conditions.NEW, StockType.OTHER);
 
         assertEquals("Gold", stock.getName());
         assertEquals(5, stock.getQuantity());
         assertEquals(10, stock.getTotalSize()); 
         assertEquals(Conditions.NEW, stock.getCondition());
         assertSame(qualities, stock.getSpecialQualities());
+        assertEquals(StockType.OTHER, stock.getStockType());
         assertNull(stock.getExpirationDate());
     }
 	
@@ -231,13 +258,14 @@ public class TestConstructor {
 
         LocalDate expiration = LocalDate.of(2026, 5, 1);
 
-        Stock stock = new Stock("Food", 4, 2, qualities, Conditions.GOOD, expiration);
+        Stock stock = new Stock("Food", 4, 2, qualities, Conditions.GOOD, StockType.FOOD, expiration);
 
         assertEquals("Food", stock.getName());
         assertEquals(4, stock.getQuantity());
         assertEquals(8, stock.getTotalSize());
         assertEquals(Conditions.GOOD, stock.getCondition());
         assertSame(qualities, stock.getSpecialQualities());
+        assertEquals(StockType.FOOD, stock.getStockType());
         assertEquals(expiration, stock.getExpirationDate());
     }
 }

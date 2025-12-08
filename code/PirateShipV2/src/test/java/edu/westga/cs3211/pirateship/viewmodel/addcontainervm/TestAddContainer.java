@@ -22,11 +22,12 @@ public class TestAddContainer {
         vm.getSizeProperty().set(20);
         vm.getStockTypeProperty().set(StockType.AMMUNITION);
         vm.updateSelectedQualities(List.of(SpecialQualities.EXPLOSIVE));
-
+        int numContainersFromLoad = vm.getShip().getContainers().size();
+        
         String result = vm.addContainer();
 
         assertTrue(result.startsWith("Container ID:"));
-        assertEquals(1, vm.getShip().getContainers().size());
+        assertEquals(numContainersFromLoad + 1, vm.getShip().getContainers().size());
     }
 
     @Test
@@ -39,4 +40,19 @@ public class TestAddContainer {
         	vm.addContainer()
         );
     }
+    
+    @Test
+    void testAddContainerFailsDueToCapacity() {
+		User currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
+		AddContainerVM vm = new AddContainerVM(currentUser);
+		vm.getSizeProperty().set(Integer.MAX_VALUE);
+		vm.getStockTypeProperty().set(StockType.FOOD);
+		int sizeBefore = vm.getShip().getContainers().size();
+		
+		vm.addContainer();
+		
+		int result = vm.getShip().getContainers().size();
+
+		assertEquals(sizeBefore, result);
+	}
 }
