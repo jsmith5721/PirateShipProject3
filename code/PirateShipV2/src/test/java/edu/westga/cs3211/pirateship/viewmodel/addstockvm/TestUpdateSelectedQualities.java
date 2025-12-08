@@ -1,25 +1,31 @@
 package edu.westga.cs3211.pirateship.viewmodel.addstockvm;
 
 import edu.westga.cs3211.pirateship.viewmodel.AddStockVM;
-import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestUpdateSelectedQualities {
+	User currentUser;
+	
+	@BeforeEach
+	void setUp() {
+		currentUser = new User("A", "a", "p", Roles.CREWMATE);
+	}
+	
 	@Test
     void testSelectedNull() {
-        Ship ship = new Ship("Test", 100);
-        ship.setCurrentUser(new User("A", "a", "p", Roles.CREWMATE));
-
-        AddStockVM vm = new AddStockVM(ship);
+        AddStockVM vm = new AddStockVM(this.currentUser);
 
         assertThrows(NullPointerException.class, () -> 
         	vm.updateSelectedQualities(null)
@@ -28,33 +34,28 @@ public class TestUpdateSelectedQualities {
 
     @Test
     void testSelectedEmpty() {
-        Ship ship = new Ship("Test", 100);
-        ship.setCurrentUser(new User("A", "a", "p", Roles.CREWMATE));
-
-        AddStockVM vm = new AddStockVM(ship);
+        AddStockVM vm = new AddStockVM(currentUser);
         vm.updateSelectedQualities(new ArrayList<>());
 
         assertEquals(0, vm.getContainerListProperty().size());
+        assertFalse(vm.showExpirationProperty().get());
     }
 
     @Test
     void testNoMatchInContainers() {
-        Ship ship = new Ship("Test", 100);
-        ship.setCurrentUser(new User("A", "a", "p", Roles.CREWMATE));
+        AddStockVM vm = new AddStockVM(currentUser);
 
-        AddStockVM vm = new AddStockVM(ship);
+        ArrayList<SpecialQualities> qualities = new ArrayList<>();
+        qualities.add(SpecialQualities.PARISHABLE);
 
-        ArrayList<SpecialQualities> q = new ArrayList<>();
-        q.add(SpecialQualities.EXPLOSIVE);
-
-        vm.updateSelectedQualities(q);
+        vm.updateSelectedQualities(qualities);
 
         assertEquals(0, vm.getContainerListProperty().size());
+        assertTrue(vm.showExpirationProperty().get());
     }
 	
     @Test
     void testUpdateSelectedQualitiesFiltersContainersCorrectly() {
-        Ship ship = new Ship("Black Pearl", 500);
         ArrayList<SpecialQualities> q1 = new ArrayList<>();
         q1.add(SpecialQualities.FRAGILE);
 
@@ -64,12 +65,13 @@ public class TestUpdateSelectedQualities {
 
         Container c1 = new Container(100, q1);
         Container c2 = new Container(100, q2);
-        ship.addContainer(c1);
-        ship.addContainer(c2);
 
-        AddStockVM vm = new AddStockVM(ship);
+        AddStockVM vm = new AddStockVM(currentUser);
+        vm.getShip().addContainer(c1);
+        vm.getShip().addContainer(c2);
         vm.updateSelectedQualities(List.of(SpecialQualities.FRAGILE));
 
         assertEquals(2, vm.getContainerListProperty().size());
+        assertFalse(vm.showExpirationProperty().get());
     }
 }

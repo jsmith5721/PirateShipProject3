@@ -2,8 +2,8 @@ package edu.westga.cs3211.pirateship.view;
 
 import edu.westga.cs3211.pirateship.model.Conditions;
 import edu.westga.cs3211.pirateship.model.Container;
-import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.AddStockVM;
 
 import javafx.beans.binding.Bindings;
@@ -67,10 +67,10 @@ public class AddStockView {
 	/**
 	 * Sets the ship and initializes the page.
 	 *
-	 * @param ship the new ship
+	 * @param currentUser currently logged in user
 	 */
-	public void setShip(Ship ship) {
-		this.viewModel = new AddStockVM(ship);
+	public void startup(User currentUser) {
+		this.viewModel = new AddStockVM(currentUser);
 		this.bindViewModel();
 	}
 
@@ -161,12 +161,14 @@ public class AddStockView {
 	private void setUpListenerForHomeButton() {
 		this.homeButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(LoginView.class.getResource("LandingPage.fxml"));
 				loader.load();
 
 				LandingPage controller = loader.getController();
-				controller.setShip(this.viewModel.getShip());
+				controller.startup(this.viewModel.getShip().getCurrentUser());
 
 				Parent parent = loader.getRoot();
 				Scene scene = new Scene(parent);

@@ -17,10 +17,6 @@ public class TestAuthenticate {
 	User user;
 	@BeforeEach
 	void setUp() {
-		Authenticator authenticator = new Authenticator();
-		if (authenticator != null) {
-			System.out.println("Authenticator instance created");
-		}
 		ship = new Ship("Black Pearl", 5000);
 		user = new User("Jack", "jack", "pw", Roles.CREWMATE);
 		ship.addCrewMember(user);

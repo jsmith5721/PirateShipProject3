@@ -9,62 +9,62 @@ import javafx.scene.control.TableView;
 
 import edu.westga.cs3211.pirateship.model.Stock;
 import edu.westga.cs3211.pirateship.model.Ship;
+import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 import edu.westga.cs3211.pirateship.viewmodel.ViewInventoryVM;
 
 import java.time.LocalDate;
 
 public class ViewInventoryView {
 
-    @FXML
-    private TableView<Stock> stockTable;
+	@FXML
+	private TableView<Stock> stockTable;
 
-    @FXML
-    private TableColumn<Stock, String> nameCol;
+	@FXML
+	private TableColumn<Stock, String> nameCol;
 
-    @FXML
-    private TableColumn<Stock, Number> qtyCol;
+	@FXML
+	private TableColumn<Stock, Number> qtyCol;
 
-    @FXML
-    private TableColumn<Stock, String> conditionCol;
+	@FXML
+	private TableColumn<Stock, String> conditionCol;
 
-    @FXML
-    private TableColumn<Stock, String> specialCol;
+	@FXML
+	private TableColumn<Stock, String> specialCol;
 
-    @FXML
-    private TableColumn<Stock, LocalDate> expCol;
+	@FXML
+	private TableColumn<Stock, LocalDate> expCol;
 
-    private ViewInventoryVM viewModel;
+	private ViewInventoryVM viewModel;
 
-    @FXML
-    public void initialize() {
-        this.viewModel = new ViewInventoryVM();
 
-        nameCol.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getName()));
+	public void setShip(Ship ship) {
+		this.viewModel = new ViewInventoryVM(ship);
+		this.bindViewModel();
+	}
 
-        qtyCol.setCellValueFactory(cell ->
-                new SimpleIntegerProperty(cell.getValue().getQuantity()));
+	private void bindViewModel() {
+		nameCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getName()));
 
-        conditionCol.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getCondition().toString()));
+		qtyCol.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getQuantity()));
 
-        specialCol.setCellValueFactory(cell ->
-                new SimpleStringProperty(cell.getValue().getSpecialQualities().toString()));
+		conditionCol.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCondition().toString()));
 
-        expCol.setCellValueFactory(cell ->
-                new SimpleObjectProperty<>(cell.getValue().getExpirationDate()));
-        
-        Ship ship = getCurrentShipSomehow(); // see note below
-        this.viewModel.loadEntireInventory(ship);
+		specialCol.setCellValueFactory(
+				cell -> new SimpleStringProperty(cell.getValue().getSpecialQualities().toString()));
 
-        stockTable.setItems(this.viewModel.getStocks());
-    }
+		expCol.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getExpirationDate()));
 
-    /**
-     * TEMP placeholder – replace this with however your app gets the current Ship.
-     * Could be a singleton, passed from LandingPage, from Authenticator, etc.
-     */
-    private Ship getCurrentShipSomehow() {
-        return null;
-    }
+		Ship ship = getCurrentShipSomehow(); // see note below
+		this.viewModel.loadEntireInventory(ship);
+
+		stockTable.setItems(this.viewModel.getStocks());
+	}
+
+	/**
+	 * TEMP placeholder – replace this with however your app gets the current Ship.
+	 * Could be a singleton, passed from LandingPage, from Authenticator, etc.
+	 */
+	private Ship getCurrentShipSomehow() {
+		return null;
+	}
 }

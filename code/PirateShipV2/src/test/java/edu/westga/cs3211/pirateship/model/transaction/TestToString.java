@@ -25,7 +25,6 @@ public class TestToString {
         Transaction transaction = new Transaction(date, "Rum Barrel", 5, user, qualities);
 
         String result = transaction.toString();
-        System.out.println(result);
 
         assertTrue(result.contains("Date:"));
         assertTrue(result.contains("Wed Dec 31"));

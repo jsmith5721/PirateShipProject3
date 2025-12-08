@@ -1,5 +1,6 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -7,7 +8,7 @@ import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
-
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -34,10 +35,15 @@ public class StockChangesVM {
 	/**
 	 * Instantiates a new StockChangesVM.
 	 *
-	 * @param ship the ship
+	 * @param currentUser the currently logged in user
 	 */
-	public StockChangesVM(Ship ship) {
-		this.ship = ship;
+	public StockChangesVM(User currentUser) {
+		try {
+			this.ship = ShipSerializer.loadShip();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.ship.setCurrentUser(currentUser);
 
 		this.masterTransactionList = new SimpleListProperty<>(
 				FXCollections.observableArrayList(this.ship.getTransactions()));
@@ -58,6 +64,15 @@ public class StockChangesVM {
 
 		this.startDate = new SimpleObjectProperty<>(null);
 		this.endDate = new SimpleObjectProperty<>(null);
+	}
+	
+	/**
+	 * Master transaction list property.
+	 *
+	 * @return the master list property
+	 */
+	public ListProperty<Transaction> masterTransactionListProperty() {
+		return this.masterTransactionList;
 	}
 
 	/**
@@ -215,5 +230,16 @@ public class StockChangesVM {
 		}
 
 		return dateFiltered;
+	}
+
+	/**
+	 * Saves the ship data.
+	 */
+	public void saveData() {
+		try {
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }

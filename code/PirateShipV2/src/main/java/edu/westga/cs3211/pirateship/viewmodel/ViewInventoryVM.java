@@ -16,9 +16,11 @@ import edu.westga.cs3211.pirateship.model.Stock;
 public class ViewInventoryVM {
 
     private final ObservableList<Stock> stocks;
+    private Ship ship;
 
-    public ViewInventoryVM() {
+    public ViewInventoryVM(Ship ship) {
         this.stocks = FXCollections.observableArrayList();
+        this.ship = ship;
     }
 
     public ObservableList<Stock> getStocks() {
@@ -50,6 +52,10 @@ public class ViewInventoryVM {
             this.stocks.addAll(container.getStockItems());
         }
     }
+    
+    public Ship getShip() {
+		return this.ship;
+	}
 }
 
 

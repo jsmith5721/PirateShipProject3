@@ -1,109 +1,82 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
-import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.Ship;
-import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
-import edu.westga.cs3211.pirateship.model.serializers.CargoSerializer;
-import edu.westga.cs3211.pirateship.model.serializers.TransactionSerializer;
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * The Class LandingPageVM.
+ * 
  * @author Justin Smith
  * @version Fall 2025
  */
 public class LandingPageVM {
 	private Ship ship;
-    private final StringProperty welcomeMessage;
-    private final BooleanProperty canReviewStockChanges;
-    
-    /**
-     * Instantiates a new landing page VM.
-     * 
-     * @param ship the ship being modeled
-     */
-    public LandingPageVM(Ship ship) {
-		this.ship = ship;
+	private final StringProperty welcomeMessage;
+	private final BooleanProperty canReviewStockChanges;
 
-		this.welcomeMessage = new SimpleStringProperty("Welcome, " + ship.getCurrentUser().getName());
-		this.canReviewStockChanges = new SimpleBooleanProperty(
-				ship.getCurrentUser().getRole() == Roles.QUARTERMASTER
-		);
-		
-		this.loadCargoAndTransactions();
+	/**
+	 * Instantiates a new landing page VM.
+	 * 
+	 * @param currentUser the currently logged in user
+	 */
+	public LandingPageVM(User currentUser) {
+		try {
+			this.ship = ShipSerializer.loadShip();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		this.ship.setCurrentUser(currentUser);
+
+		this.welcomeMessage = new SimpleStringProperty("Welcome, " + this.ship.getCurrentUser().getName());
+		this.canReviewStockChanges = new SimpleBooleanProperty(this.ship.getCurrentUser().getRole() == Roles.QUARTERMASTER);
+
 	}
 
-    /**
-     * Load cargo and transactions.
-     */
-    private void loadCargoAndTransactions() {
-        try {
-        	CargoHull hull = CargoSerializer.loadCargo();
-            if (hull != null) {
-            	this.ship.setCargoHull(hull);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+	/**
+	 * Gets the ship.
+	 *
+	 * @return the ship
+	 */
+	public Ship getShip() {
+		return this.ship;
+	}
 
-        try {
-            List<Transaction> transactions = TransactionSerializer.loadTransactionHistory();
-            if (transactions != null) {
-            	this.ship.getCargoHull().getTransactionHistory().addAll(transactions);
-            }
-        } catch (IOException ex) {
-        	ex.printStackTrace();
-        }
-    }
+	/**
+	 * Welcome message property.
+	 *
+	 * @return the string property
+	 */
+	public StringProperty welcomeMessageProperty() {
+		return this.welcomeMessage;
+	}
 
-    /**
-     * Gets the ship.
-     *
-     * @return the ship
-     */
-    public Ship getShip() {
-        return this.ship;
-    }
+	/**
+	 * Can review stock changes property.
+	 *
+	 * @return the boolean property
+	 */
+	public BooleanProperty canReviewStockChangesProperty() {
+		return this.canReviewStockChanges;
+	}
 
-    /**
-     * Gets the current user.
-     *
-     * @return the current user
-     */
-    public User getCurrentUser() {
-        return this.ship.getCurrentUser();
-    }
-
-    /**
-     * Welcome message property.
-     *
-     * @return the string property
-     */
-    public StringProperty welcomeMessageProperty() {
-        return this.welcomeMessage;
-    }
-
-    /**
-     * Can review stock changes property.
-     *
-     * @return the boolean property
-     */
-    public BooleanProperty canReviewStockChangesProperty() {
-        return this.canReviewStockChanges;
-    }
-    
-    /**
-     * Save data.
-     */
-    public void saveData() {
-		this.ship.saveData();
+	/**
+	 * Save data.
+	 */
+	public void saveData() {
+		try {
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE,
+					ShipSerializer.TRANSACTION_TXT_FILE);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }

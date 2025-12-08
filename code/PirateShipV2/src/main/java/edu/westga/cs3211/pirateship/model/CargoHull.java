@@ -98,7 +98,6 @@ public class CargoHull {
 		}
 		if (this.getAvailableCapacity() >= container.getSize()) {
 			this.containers.add(container);
-			System.out.println("Container added Hull Level: " + container.toString());
 		} else {
 			throw new IllegalArgumentException("Not enough capacity in the cargo hull for this container.");
 		}

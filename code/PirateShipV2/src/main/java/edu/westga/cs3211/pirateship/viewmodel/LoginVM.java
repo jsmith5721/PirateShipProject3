@@ -3,7 +3,7 @@ package edu.westga.cs3211.pirateship.viewmodel;
 import edu.westga.cs3211.pirateship.model.Authenticator;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.User;
-import edu.westga.cs3211.pirateship.model.serializers.UserSerializer;
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,15 +23,14 @@ public class LoginVM {
      * Instantiates a new login VM.
      */
     public LoginVM() {
-    	this.ship = new Ship("Flying Duchman", 5000);
+    	try {
+			this.ship = ShipSerializer.loadShip();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+    	
         this.username = new SimpleStringProperty("");
         this.password = new SimpleStringProperty("");
-
-        try {
-            UserSerializer.loadUsers(this.ship);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**
@@ -84,9 +83,9 @@ public class LoginVM {
     /**
      * Save users.
      */
-    public void saveUsers() {
+    public void saveShip() {
 		try {
-			UserSerializer.saveUsers(this.ship);
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}

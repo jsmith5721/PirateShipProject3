@@ -1,36 +1,40 @@
 package edu.westga.cs3211.pirateship.viewmodel.addcontainervm;
 
 import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
-import edu.westga.cs3211.pirateship.model.Ship;
+import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.User;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.List;
 
 public class TestAddContainer {
 
     @Test
     void testAddContainerSuccess() {
-        Ship ship = new Ship("Black Pearl", 100);
-        AddContainerVM vm = new AddContainerVM(ship);
+        User currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
+        AddContainerVM vm = new AddContainerVM(currentUser);
         vm.getSizeProperty().set(20);
         vm.updateSelectedQualities(List.of(SpecialQualities.EXPLOSIVE));
 
         String result = vm.addContainer();
 
         assertTrue(result.startsWith("Container ID:"));
-        assertEquals(1, ship.getContainers().size());
+        assertEquals(1, vm.getShip().getContainers().size());
     }
 
     @Test
-    void testAddContainerFailsReturnsEmptyString() {
-        Ship ship = new Ship("Black Pearl", 10);
-        AddContainerVM vm = new AddContainerVM(ship);
-        vm.getSizeProperty().set(50);
+    void testAddContainerFailsThrowsException() {
+        User currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
+        AddContainerVM vm = new AddContainerVM(currentUser);
+        vm.getSizeProperty().set(0);
 
-        String result = vm.addContainer();
-
-        assertEquals("", result);
+        assertThrows(IllegalArgumentException.class, () -> 
+        	vm.addContainer()
+        );
     }
 }

@@ -1,6 +1,6 @@
 package edu.westga.cs3211.pirateship.view;
 
-import edu.westga.cs3211.pirateship.model.Ship;
+import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.LandingPageVM;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,15 +43,16 @@ public class LandingPage {
 		assert this.reviewStockButton != null : "fx:id=\"reviewStockButton\" was not injected: check your FXML file 'LandingPage.fxml'.";
 		assert this.addContainerButton != null : "fx:id=\"addContainerButton\" was not injected: check your FXML file 'LandingPage.fxml'.";
 		assert this.welcomeLable != null : "fx:id=\"welcomeLable\" was not injected: check your FXML file 'LandingPage.fxml'.";
+		assert this.viewInventoryButton != null : "fx:id=\"viewInventoryButton\" was not injected: check your FXML file 'LandingPage.fxml'.";
 	}
     
     /**
 	 * Sets the ship and initializes the page.
 	 *
-	 * @param ship the new ship
+	 * @param currentUser currently logged in user
 	 */
-    public void setShip(Ship ship) {
-    	this.viewModel = new LandingPageVM(ship);
+    public void startup(User currentUser) {
+    	this.viewModel = new LandingPageVM(currentUser);
     	this.bindViewModel();
     }
 
@@ -64,7 +65,6 @@ public class LandingPage {
         this.reviewStockButton.visibleProperty().bind(this.viewModel.canReviewStockChangesProperty());
         this.reviewStockButton.managedProperty().bind(this.viewModel.canReviewStockChangesProperty());
         this.reviewStockButton.disableProperty().bind(this.viewModel.canReviewStockChangesProperty().not());
-        
         
         this.setUpListenerForViewInventoryButton();
         this.setUpListenerForAddStockButton();
@@ -79,13 +79,14 @@ public class LandingPage {
     private void setUpListenerForViewInventoryButton() {
 		this.viewInventoryButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 	            FXMLLoader loader = new FXMLLoader();
 	            loader.setLocation(LandingPage.class.getResource("ViewInventory.fxml"));
 	            loader.load();
 	            
 	            ViewInventoryView controller = loader.getController();
-	            // Debugging line to print containers
-	            System.out.println("Landing to Add Stock: \n" + this.viewModel.getShip().getContainers());
+	            controller.setShip(this.viewModel.getShip());
 
 	            Parent parent = loader.getRoot();
 	            Scene scene = new Scene(parent);
@@ -109,14 +110,14 @@ public class LandingPage {
     private void setUpListenerForAddStockButton() {
 		this.addStockButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 	            FXMLLoader loader = new FXMLLoader();
 	            loader.setLocation(LandingPage.class.getResource("AddStockView.fxml"));
 	            loader.load();
 	            
 	            AddStockView controller = loader.getController();
-	            controller.setShip(this.viewModel.getShip());
-	            // Debugging line to print containers
-	            System.out.println("Landing to Add Stock: \n" + this.viewModel.getShip().getContainers());
+	            controller.startup(this.viewModel.getShip().getCurrentUser());
 
 	            Parent parent = loader.getRoot();
 	            Scene scene = new Scene(parent);
@@ -140,12 +141,14 @@ public class LandingPage {
     private void setUpListenerForAddContainerButton() {
 		this.addContainerButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 	            FXMLLoader loader = new FXMLLoader();
 	            loader.setLocation(LandingPage.class.getResource("AddContainerView.fxml"));
 	            loader.load();
 	            
 	            AddContainerView controller = loader.getController();
-	            controller.setShip(this.viewModel.getShip());
+	            controller.startup(this.viewModel.getShip().getCurrentUser());
 
 	            Parent parent = loader.getRoot();
 	            Scene scene = new Scene(parent);
@@ -169,12 +172,14 @@ public class LandingPage {
     private void setUpListenerForReviewStockButton() {
 		this.reviewStockButton.setOnAction((ActionEvent event) -> {
 			try {
+				this.viewModel.saveData();
+				
 	            FXMLLoader loader = new FXMLLoader();
 	            loader.setLocation(LandingPage.class.getResource("StockChangesView.fxml"));
 	            loader.load();
 	            
 	            StockChangesView controller = loader.getController();
-	            controller.setShip(this.viewModel.getShip());
+	            controller.startup(this.viewModel.getShip().getCurrentUser());
 
 	            Parent parent = loader.getRoot();
 	            Scene scene = new Scene(parent);

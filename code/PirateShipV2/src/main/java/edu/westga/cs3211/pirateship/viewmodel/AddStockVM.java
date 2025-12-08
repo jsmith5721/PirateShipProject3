@@ -1,5 +1,6 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,8 @@ import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
-
+import edu.westga.cs3211.pirateship.model.User;
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -47,10 +49,17 @@ public class AddStockVM {
 	/**
 	 * Instantiates a new AddStockVM.
 	 *
-	 * @param ship the ship
+	 * @param currentUser the currently logged in user
 	 */
-	public AddStockVM(Ship ship) {
-		this.ship = ship;
+	public AddStockVM(User currentUser) {
+		try {
+			this.ship = ShipSerializer.loadShip();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		this.ship.setCurrentUser(currentUser);
+		
 		this.name = new SimpleStringProperty();
 		this.size = new SimpleIntegerProperty();
 		this.quantity = new SimpleIntegerProperty(1);
@@ -67,7 +76,7 @@ public class AddStockVM {
 		this.specialQualitiesList = new SimpleListProperty<>(FXCollections.observableArrayList(qualitiesList));
 		this.selectedSpecialQualities = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-		this.masterContainerList = FXCollections.observableArrayList(ship.getContainers());
+		this.masterContainerList = FXCollections.observableArrayList(this.ship.getContainers());
 
 		this.filteredContainerList = new SimpleListProperty<>(FXCollections.observableArrayList());
 		this.filteredContainerList.addAll(this.masterContainerList);
@@ -193,6 +202,9 @@ public class AddStockVM {
 	 * @param selected the selected
 	 */
 	public void updateSelectedQualities(List<SpecialQualities> selected) {
+		if (selected == null) {
+			throw new NullPointerException("Selected qualities cannot be null.");
+		}
 		this.selectedSpecialQualities.set(FXCollections.observableArrayList(selected));
 		this.applyContainerFilter();
 	}
@@ -201,11 +213,12 @@ public class AddStockVM {
 	 * Apply container filter.
 	 */
 	private void applyContainerFilter() {
+		this.masterContainerList.setAll(this.ship.getContainers());
 		this.filteredContainerList.clear();
 
 		List<SpecialQualities> selected = this.selectedSpecialQualities.get();
 
-		if (selected == null || selected.isEmpty()) {
+		if (selected.isEmpty()) {
 			this.filteredContainerList.addAll(this.masterContainerList);
 			return;
 		}
@@ -257,7 +270,7 @@ public class AddStockVM {
 			stock = new Stock(this.name.get(), this.quantity.get(), this.size.get(),
 					this.condition.get());
 		}
-
+		
 		this.ship.addStockToContainer(this.selectedContainer.get().getContainerID(), stock);
 		
 		int selectedContainerId = this.selectedContainer.get().getContainerID();
@@ -276,11 +289,15 @@ public class AddStockVM {
 		List<Container> current = new ArrayList<>(this.filteredContainerList);
 		this.filteredContainerList.set(FXCollections.observableArrayList(current));
 	}
-
+	
 	/**
 	 * Save data.
 	 */
 	public void saveData() {
-		this.ship.saveData();
+		try {
+			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
