@@ -4,6 +4,7 @@ import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,10 +20,10 @@ public class TestToString {
         User user = new User("Jack Sparrow", "jack", "pw", Roles.CREWMATE);
 
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        qualities.add(SpecialQualities.FRAGILE);
+        qualities.add(SpecialQualities.LIQUID);
         qualities.add(SpecialQualities.VALUABLE);
 
-        Transaction transaction = new Transaction(date, "Rum Barrel", 5, user, qualities);
+        Transaction transaction = new Transaction(date, "Rum Barrel", 5, user, StockType.FOOD, qualities);
 
         String result = transaction.toString();
 
@@ -31,6 +32,7 @@ public class TestToString {
         assertTrue(result.contains("Stock Name: Rum Barrel"));
         assertTrue(result.contains("Quantity: 5"));
         assertTrue(result.contains("Crewmember: jack"));
-        assertTrue(result.contains("Special Qualities: FRAGILE, VALUABLE, "));
+        assertTrue(result.contains("Stock Type: FOOD"));
+        assertTrue(result.contains("Special Qualities: LIQUID, VALUABLE, "));
     }
 }

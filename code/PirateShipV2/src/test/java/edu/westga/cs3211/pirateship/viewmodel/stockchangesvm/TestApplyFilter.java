@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.StockChangesVM;
@@ -33,6 +34,10 @@ public class TestApplyFilter {
     void setup() {
         this.currentUser = new User("Jack Sparrow", "jsparrow", "blackpearl", Roles.QUARTERMASTER);
         this.vm = new StockChangesVM(this.currentUser);
+        this.vm.getShip().getContainers().clear();
+        this.vm.getShip().getTransactions().clear();
+        this.vm.getShip().getCrew().clear();
+        this.vm.masterTransactionListProperty().setAll(this.vm.getShip().getTransactions());
         
         this.userA = new User("Alice", "alice", "pw", Roles.CREWMATE);
         this.userB = new User("Bob", "bob", "pw", Roles.CREWMATE);
@@ -51,9 +56,9 @@ public class TestApplyFilter {
         q3.add(SpecialQualities.FRAGILE);
         q3.add(SpecialQualities.EXPLOSIVE);
 
-        this.t1 = new Transaction(toDate(LocalDate.of(2024, 1, 10)), "A", 1, this.userA, q1);
-        this.t2 = new Transaction(toDate(LocalDate.of(2024, 2, 15)), "B", 1, this.userB, q2);
-        this.t3 = new Transaction(toDate(LocalDate.of(2024, 3, 10)), "C", 1, this.userA, q3);
+        this.t1 = new Transaction(toDate(LocalDate.of(2024, 1, 10)), "A", 1, this.userA, StockType.OTHER, q1);
+        this.t2 = new Transaction(toDate(LocalDate.of(2024, 2, 15)), "B", 1, this.userB, StockType.FOOD, q2);
+        this.t3 = new Transaction(toDate(LocalDate.of(2024, 3, 10)), "C", 1, this.userA, StockType.AMMUNITION, q3);
 
         this.vm.getShip().getTransactions().add(this.t1);
         this.vm.getShip().getTransactions().add(this.t2);
@@ -130,6 +135,20 @@ public class TestApplyFilter {
         vm.applyFilter();
         assertEquals(2, vm.filteredTransactionsProperty().size());
     }
+    
+    @Test
+    void testApplyFilterStockTypeNullNoFilter() {
+    	vm.getStockTypeProperty().set(null);
+    	vm.applyFilter();
+    	assertEquals(vm.masterTransactionListProperty().size(), vm.filteredTransactionsProperty().size());
+    }
+    
+    @Test
+    void testApplyFilterStockTypeOnly() {
+		vm.getStockTypeProperty().set(StockType.FOOD);
+		vm.applyFilter();
+		assertEquals(1, vm.filteredTransactionsProperty().size());
+	}
 
     @Test
     void testApplyFilterAllFiltersCombined() {
@@ -138,6 +157,8 @@ public class TestApplyFilter {
         vm.endDateProperty().set(LocalDate.of(2024, 3, 20));
 
         vm.selectedCrewmemberProperty().set("Alice");
+        
+        vm.getStockTypeProperty().set(StockType.AMMUNITION);
 
         vm.selectedSpecialQualitiesProperty().add(SpecialQualities.EXPLOSIVE);
 

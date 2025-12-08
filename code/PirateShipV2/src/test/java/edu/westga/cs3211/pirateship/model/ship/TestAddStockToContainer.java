@@ -6,6 +6,7 @@ import edu.westga.cs3211.pirateship.model.Roles;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
@@ -31,10 +32,10 @@ public class TestAddStockToContainer {
         ship.setCurrentUser(user);
 
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(5, qualities);
+        Container container = new Container(5, qualities, StockType.OTHER);
         ship.addContainer(container);
 
-        Stock tooLargeStock = new Stock("Cannons", 10, 10, Conditions.NEW);
+        Stock tooLargeStock = new Stock("Cannons", 10, 10, Conditions.NEW, StockType.OTHER);
 
         assertThrows(IllegalArgumentException.class, () -> {
             ship.addStockToContainer(container.getContainerID(), tooLargeStock);
@@ -46,10 +47,10 @@ public class TestAddStockToContainer {
         Ship ship = new Ship("Dauntless", 300);
 
         ArrayList<SpecialQualities> quals = new ArrayList<>();
-        Container container = new Container(50, quals);
+        Container container = new Container(50, quals, StockType.FOOD);
         ship.addContainer(container);
 
-        Stock stock = new Stock("Rum", 2, 5, Conditions.GOOD);
+        Stock stock = new Stock("Rum", 2, 5, Conditions.GOOD, StockType.FOOD);
 
         assertThrows(IllegalArgumentException.class, () -> {
             ship.addStockToContainer(container.getContainerID(), stock);
@@ -62,7 +63,7 @@ public class TestAddStockToContainer {
         User user = new User("Josh", "josh", "pw", Roles.CREWMATE);
         ship.setCurrentUser(user);
 
-        Stock stock = new Stock("Rum", 2, 5, Conditions.GOOD);
+        Stock stock = new Stock("Rum", 2, 5, Conditions.GOOD, StockType.FOOD);
 
         assertThrows(IllegalArgumentException.class, () -> {
             ship.addStockToContainer(999, stock);
@@ -76,10 +77,10 @@ public class TestAddStockToContainer {
         ship.setCurrentUser(user);
 
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
-        Container container = new Container(100, qualities);
+        Container container = new Container(100, qualities, StockType.FOOD);
         ship.addContainer(container);
 
-        Stock stock = new Stock("Rum", 5, 5, Conditions.NEW);
+        Stock stock = new Stock("Rum", 5, 5, Conditions.NEW, StockType.FOOD);
 
         ship.addStockToContainer(container.getContainerID(), stock);
 

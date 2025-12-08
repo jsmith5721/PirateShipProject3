@@ -36,6 +36,7 @@ public class TestUpdateSelectedQualities {
     @Test
     void testSelectedEmpty() {
         AddStockVM vm = new AddStockVM(currentUser);
+        vm.getShip().getContainers().clear();
         vm.updateSelectedQualities(new ArrayList<>());
 
         assertEquals(0, vm.getContainerListProperty().size());
@@ -45,7 +46,8 @@ public class TestUpdateSelectedQualities {
     @Test
     void testNoMatchInContainers() {
         AddStockVM vm = new AddStockVM(currentUser);
-
+        vm.getShip().getContainers().clear();
+        
         ArrayList<SpecialQualities> qualities = new ArrayList<>();
         qualities.add(SpecialQualities.PARISHABLE);
 
@@ -68,6 +70,7 @@ public class TestUpdateSelectedQualities {
         Container c2 = new Container(100, q2, StockType.OTHER);
 
         AddStockVM vm = new AddStockVM(currentUser);
+        vm.getShip().getContainers().clear();
         vm.getShip().addContainer(c1);
         vm.getShip().addContainer(c2);
         vm.updateSelectedQualities(List.of(SpecialQualities.FRAGILE));
@@ -75,4 +78,31 @@ public class TestUpdateSelectedQualities {
         assertEquals(2, vm.getContainerListProperty().size());
         assertFalse(vm.showExpirationProperty().get());
     }
+    
+    @Test
+    public void testUpdateSelectedQualitiesFiltersMultipleQualites() {
+		ArrayList<SpecialQualities> q1 = new ArrayList<>();
+		q1.add(SpecialQualities.FRAGILE);
+
+		ArrayList<SpecialQualities> q2 = new ArrayList<>();
+		q2.add(SpecialQualities.EXPLOSIVE);
+		q2.add(SpecialQualities.FRAGILE);
+
+		ArrayList<SpecialQualities> q3 = new ArrayList<>();
+		q3.add(SpecialQualities.LIQUID);
+
+		Container c1 = new Container(100, q1, StockType.OTHER);
+		Container c2 = new Container(100, q2, StockType.OTHER);
+		Container c3 = new Container(100, q3, StockType.OTHER);
+
+		AddStockVM vm = new AddStockVM(currentUser);
+		vm.getShip().getContainers().clear();
+		vm.getShip().addContainer(c1);
+		vm.getShip().addContainer(c2);
+		vm.getShip().addContainer(c3);
+		vm.updateSelectedQualities(List.of(SpecialQualities.FRAGILE, SpecialQualities.EXPLOSIVE));
+
+		assertEquals(1, vm.getContainerListProperty().size());
+		assertFalse(vm.showExpirationProperty().get());
+	}
 }
