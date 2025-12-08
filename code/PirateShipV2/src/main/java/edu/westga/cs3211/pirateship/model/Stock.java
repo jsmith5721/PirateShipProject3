@@ -16,6 +16,7 @@ public class Stock {
 	private int totalSize;
 	private Collection<SpecialQualities> specialQualities;
 	private Conditions condition;
+	private StockType stockType;
 	private LocalDate expirationDate;
 	
 	/**
@@ -25,8 +26,9 @@ public class Stock {
 	 * @param quantity the quantity
 	 * @param size the size of each individual item
 	 * @param condition the condition
+	 * @param stockType the stock type
 	 */
-	public Stock(String name, int quantity, int size, Conditions condition) {
+	public Stock(String name, int quantity, int size, Conditions condition, StockType stockType) {
 		
 		if (name == null || name.isBlank()) {
 			throw new IllegalArgumentException("Name cannot be null");
@@ -34,12 +36,16 @@ public class Stock {
 		if (condition == null) {
 			throw new IllegalArgumentException("Condition cannot be null");
 		}
+		if (stockType == null) {
+			throw new IllegalArgumentException("Stock type cannot be null");
+		}
 		if (quantity <= 0) {
 			throw new IllegalArgumentException("Quantity must be greater than zero");
 		}
 		if (size <= 0) {
 			throw new IllegalArgumentException("Size must be greater than zero");
 		}
+		
 		this.name = name;
 		this.quantity = quantity;
 		this.individualSize = size;
@@ -47,6 +53,7 @@ public class Stock {
 		this.specialQualities = new ArrayList<SpecialQualities>();
 		this.condition = condition;
 		this.expirationDate = null;
+		this.stockType = stockType;
 	}
 	
 	/**
@@ -57,8 +64,9 @@ public class Stock {
 	 * @param size the size of each individual item
 	 * @param specialQualities the special qualities
 	 * @param condition the condition
+	 * @param stockType the stock type
 	 */
-	public Stock(String name, int quantity, int size, Collection<SpecialQualities> specialQualities, Conditions condition) {
+	public Stock(String name, int quantity, int size, Collection<SpecialQualities> specialQualities, Conditions condition, StockType stockType) {
 		if (name == null || name.isBlank()) {
 			throw new IllegalArgumentException("Name cannot be null");
 		}
@@ -67,6 +75,9 @@ public class Stock {
 		}
 		if (condition == null) {
 			throw new IllegalArgumentException("Condition cannot be null");
+		}
+		if (stockType == null) {
+			throw new IllegalArgumentException("Stock type cannot be null");
 		}
 		if (quantity <= 0) {
 			throw new IllegalArgumentException("Quantity must be greater than zero");
@@ -81,6 +92,7 @@ public class Stock {
 		this.specialQualities = specialQualities;
 		this.condition = condition;
 		this.expirationDate = null;
+		this.stockType = stockType;
 	}
 	
 	/**
@@ -91,9 +103,10 @@ public class Stock {
 	 * @param size the size of each individual item
 	 * @param specialQualities the special qualities
 	 * @param condition the condition
+	 * @param stockType the stock type
 	 * @param expirationDate the expiration date
 	 */
-	public Stock(String name, int quantity, int size, Collection<SpecialQualities> specialQualities, Conditions condition, LocalDate expirationDate) {
+	public Stock(String name, int quantity, int size, Collection<SpecialQualities> specialQualities, Conditions condition, StockType stockType, LocalDate expirationDate) {
 		if (name == null || name.isBlank()) {
 			throw new IllegalArgumentException("Name cannot be null");
 		}
@@ -105,6 +118,9 @@ public class Stock {
 		}
 		if (expirationDate == null) {
 			throw new IllegalArgumentException("Expiration date cannot be null");
+		}
+		if (stockType == null) {
+			throw new IllegalArgumentException("Stock type cannot be null");
 		}
 		if (expirationDate.isBefore(LocalDate.now())) {
 			throw new IllegalArgumentException("Expiration date cannot be in the past");
@@ -122,6 +138,7 @@ public class Stock {
 		this.specialQualities = specialQualities;
 		this.condition = condition;
 		this.expirationDate = expirationDate;
+		this.stockType = stockType;
 	}
 	
 	/**
@@ -167,6 +184,15 @@ public class Stock {
 	 */
 	public Conditions getCondition() {
 		return this.condition;
+	}
+	
+	/**
+	 * Gets the stock type.
+	 *
+	 * @return the stock type
+	 */
+	public StockType getStockType() {
+		return this.stockType;
 	}
 	
 	/**

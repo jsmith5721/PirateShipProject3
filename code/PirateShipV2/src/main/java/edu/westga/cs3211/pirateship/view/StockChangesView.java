@@ -1,6 +1,7 @@
 package edu.westga.cs3211.pirateship.view;
 
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
+import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.StockChangesVM;
@@ -40,6 +41,8 @@ public class StockChangesView {
 	@FXML
 	private ComboBox<String> crewmemberComboBox;
 	@FXML
+	private ComboBox<StockType> stockTypeComboBox;
+	@FXML
 	private Button filterButton;
 	@FXML
 	private ListView<Transaction> stockChangesListView;
@@ -59,6 +62,7 @@ public class StockChangesView {
 		assert this.crewmemberComboBox != null;
 		assert this.filterButton != null;
 		assert this.stockChangesListView != null;
+		assert this.stockTypeComboBox != null : "fx:id=\"stockTypeComboBox\" was not injected: check your FXML file 'StockChangesView.fxml'.";
 	}
 
 	/**
@@ -78,6 +82,10 @@ public class StockChangesView {
 		this.specialQualsListView.setItems(this.viewModel.specialQualitiesListProperty());
 		this.crewmemberComboBox.itemsProperty()
 				.bind(Bindings.createObjectBinding(() -> this.viewModel.crewmemberListProperty()));
+		
+		this.stockTypeComboBox.itemsProperty().bind(Bindings
+				.createObjectBinding(() -> javafx.collections.FXCollections.observableArrayList(StockType.values())));
+		this.stockTypeComboBox.valueProperty().bindBidirectional(this.viewModel.getStockTypeProperty());
 
 		this.stockChangesListView.itemsProperty().bind(this.viewModel.filteredTransactionsProperty());
 
