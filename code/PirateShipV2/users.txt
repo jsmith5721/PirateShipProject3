@@ -1,2 +1,4 @@
 john,john1,password123,CREWMATE
 jane,jane1,password123,QUARTERMASTER
+jimmy,jimmy1,password123,COOK
+hank,hank1,password123,OFFICER
