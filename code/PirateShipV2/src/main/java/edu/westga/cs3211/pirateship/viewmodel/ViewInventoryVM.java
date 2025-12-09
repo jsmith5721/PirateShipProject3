@@ -150,11 +150,6 @@ public class ViewInventoryVM {
 	 * Save data.
 	 */
 	public void saveData() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE,
-					ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }
