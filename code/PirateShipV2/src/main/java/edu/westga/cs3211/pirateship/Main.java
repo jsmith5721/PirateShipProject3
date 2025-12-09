@@ -2,7 +2,6 @@ package edu.westga.cs3211.pirateship;
 
 import java.io.IOException;
 
-import edu.westga.cs3211.pirateship.view.SceneManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -22,7 +21,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			SceneManager.setMainStage(primaryStage);
 			Pane root = this.loadGui();
 			Scene scene = new Scene(root);
 

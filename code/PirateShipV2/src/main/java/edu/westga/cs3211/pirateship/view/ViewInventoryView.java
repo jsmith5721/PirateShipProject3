@@ -90,7 +90,20 @@ public class ViewInventoryView {
 	 */
 	public void returnToLandingPage(ActionEvent event) {
 		try {
-			SceneManager.previousScene("Flying Dutchman – Home");
+			this.viewModel.saveData();
+			
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(StockChangesView.class.getResource("LandingPage.fxml"));
+			loader.load();
+
+			LandingPage controller = loader.getController();
+			controller.startup(this.viewModel.getShip().getCurrentUser());
+
+			Parent parent = loader.getRoot();
+			Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+			stage.setScene(new Scene(parent));
+			stage.setTitle("Flying Dutchman – Home");
+			stage.show();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Landing Page.");

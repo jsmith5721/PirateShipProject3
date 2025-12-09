@@ -92,8 +92,9 @@ public class LandingPage {
 	            Scene scene = new Scene(parent);
 
 	            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
-
-	            SceneManager.moveToScene(scene, "View Inventory");
+	            stage.setScene(scene);
+	            stage.setTitle("View Inventory");
+	            stage.show();
 
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
