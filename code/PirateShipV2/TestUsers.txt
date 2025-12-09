@@ -1,0 +1,2 @@
+Will Turner,willt,swordfish,CREWMATE
+Elizabeth Swann,lizs,piratequeen,QUARTERMASTER

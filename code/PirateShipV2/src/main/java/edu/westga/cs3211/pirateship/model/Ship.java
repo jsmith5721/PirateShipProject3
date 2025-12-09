@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
+
 /**
  * Models a pirate ship.
  * @author Justin Smith
@@ -159,5 +161,16 @@ public class Ship {
 		} catch (IllegalArgumentException ex) {
 			throw ex;
 		}
+	}
+	
+	/**
+	 * Saves the ship data to files.
+	 * 
+	 * @param usersFile the file to save crew members to
+	 * @param cargoFile the file to save cargo to
+	 * @param transactionFile the file to save transactions to
+	 */
+	public void saveShipData(String usersFile, String cargoFile, String transactionFile) {
+		ShipSerializer.saveShip(this, usersFile, cargoFile, transactionFile);
 	}
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.cs3211.pirateship.model.Roles;
+import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.viewmodel.LandingPageVM;
 
@@ -33,6 +34,17 @@ public class TestConstructor {
 	void testConstructorInitializesCorrectlyCrewmate() {
 		LandingPageVM vm = new LandingPageVM(crewmate);
 
+		assertEquals(crewmate, vm.getShip().getCurrentUser());
+		assertEquals("Welcome, Will Turner", vm.welcomeMessageProperty().get());
+		assertFalse(vm.canReviewStockChangesProperty().get());
+	}
+	
+	@Test
+	void testConstructorSetShip() {
+		Ship ship = new Ship("Black Pearl", 1000);
+		LandingPageVM vm = new LandingPageVM(crewmate, ship);
+		
+		assertEquals(ship, vm.getShip());
 		assertEquals(crewmate, vm.getShip().getCurrentUser());
 		assertEquals("Welcome, Will Turner", vm.welcomeMessageProperty().get());
 		assertFalse(vm.canReviewStockChangesProperty().get());

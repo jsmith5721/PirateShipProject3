@@ -1,6 +1,5 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +36,33 @@ public class AddContainerVM {
 	 * @param currentUser the currently logged in user
 	 */
 	public AddContainerVM(User currentUser) {
-		try {
-			this.ship = ShipSerializer.loadShip();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.ship = ShipSerializer.loadShip(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		
+		this.ship.setCurrentUser(currentUser);
+		
+		this.size = new SimpleIntegerProperty();
+		this.stockType = new SimpleObjectProperty<>();
+
+		ArrayList<SpecialQualities> qualitiesList = new ArrayList<SpecialQualities>();
+		qualitiesList.add(SpecialQualities.PARISHABLE);
+		qualitiesList.add(SpecialQualities.FRAGILE);
+		qualitiesList.add(SpecialQualities.EXPLOSIVE);
+		qualitiesList.add(SpecialQualities.LIQUID);
+		qualitiesList.add(SpecialQualities.VALUABLE);
+
+		this.specialQualitiesList = new SimpleListProperty<>(FXCollections.observableArrayList(qualitiesList));
+		this.selectedSpecialQualities = new SimpleListProperty<>(FXCollections.observableArrayList());
+	}
+	
+	/**
+	 * FOR TESTING PURPOSES ONLY
+	 * Instantiates a new addContainerVM.
+	 *
+	 * @param currentUser the currently logged in user
+	 * @param ship the ship
+	 */
+	public AddContainerVM(User currentUser, Ship ship) {
+		this.ship = ship;
 		
 		this.ship.setCurrentUser(currentUser);
 		
@@ -136,10 +157,6 @@ public class AddContainerVM {
 	 * Save the ship data.
 	 */
 	public void saveData() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }

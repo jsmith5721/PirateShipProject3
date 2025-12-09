@@ -12,6 +12,7 @@ import java.util.Collection;
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Conditions;
 import edu.westga.cs3211.pirateship.model.Container;
+import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
 import edu.westga.cs3211.pirateship.model.StockType;
@@ -26,35 +27,48 @@ public class CargoSerializer {
     /**
 	 * Serializes the given CargoHull to a file.
 	 * 
-	 * @param hull the CargoHull to serialize
+	 * @param ship the ship whose cargo hull to serialize
 	 * @param file the file to serialize to
-	 * @throws IOException if an I/O error occurs
 	 */
-    public static void saveCargo(CargoHull hull, String file) throws IOException {
-        String data = serializeHull(hull);
+    public static void saveCargo(Ship ship, String file) {
+    	
+        String data = ship.getName() + "\n" + serializeHull(ship.getCargoHull());
         try (FileWriter out = new FileWriter(file)) {
             out.write(data);
-        }
+        } catch (IOException ex) {
+			ex.printStackTrace();
+		}
     }
     
     /**
 	 * Loads a CargoHull from a file.
 	 * 
+	 * @param file the file to load from
 	 * @return the loaded CargoHull or null if the file is empty
-	 * @throws IOException if an I/O error occurs
 	 */
-    public static CargoHull loadCargo() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(ShipSerializer.CARGO_TXT_FILE));
+    public static Ship loadCargo(String file) {
+    	List<String> lines = new ArrayList<>();
+    	try {
+    		lines = Files.readAllLines(Paths.get(file));
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+    	}
+        
         if (lines.isEmpty()) {
-			return null;
+			return new Ship("Flying Duchman", 5000);
 		}
+        
+        String shipName = lines.get(0);
+        
         int capacity = parseCapacity(lines);
 
         CargoHull hull = new CargoHull(capacity);
         parseContainers(lines, hull);
         updateContainerIdCounter(hull);
+        Ship ship = new Ship(shipName, capacity);
+        ship.setCargoHull(hull);
 
-        return hull;
+        return ship;
     }
 
     private static String serializeHull(CargoHull hull) {
@@ -116,7 +130,7 @@ public class CargoSerializer {
     }
 
     private static int parseCapacity(List<String> lines) {
-        String header = lines.get(0);
+        String header = lines.get(1);
         String[] parts = header.split(" ");
         return Integer.parseInt(parts[1]);
     }

@@ -68,7 +68,7 @@ public class LoginView {
 	                alert.showAndWait();
 				} else {
 					try {
-						this.viewModel.saveShip();
+						this.viewModel.saveData();
 						
 			            FXMLLoader loader = new FXMLLoader();
 			            loader.setLocation(LoginView.class.getResource("LandingPage.fxml"));
