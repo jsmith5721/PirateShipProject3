@@ -174,19 +174,12 @@ public class CargoSerializer {
                 id = Integer.parseInt(parts[1]);
                 size = Integer.parseInt(parts[2]);
                 stockType = StockType.valueOf(parts[3]);
-
-                if (parts.length > 4) {
-                    qualities = parseQualities(parts[4]);
-                } else {
-                    qualities = new ArrayList<>();
-                }
+                qualities = parseQualities(parts[4]);
                 continue;
             }
 
-            if (line.startsWith("STOCK")) {
-                Stock stock = parseStock(line);
-                stocks.add(stock);
-            }
+            Stock stock = parseStock(line);
+            stocks.add(stock);
         }
     }
 
@@ -207,12 +200,7 @@ public class CargoSerializer {
         
         StockType stockType = StockType.valueOf(parts[6]);
 
-        Collection<SpecialQualities> qualities;
-        if (parts.length > 7) {
-            qualities = parseQualities(parts[7]);
-        } else {
-            qualities = new ArrayList<>();
-        }
+        Collection<SpecialQualities> qualities = parseQualities(parts[7]);
         
         Stock stock;
         if (qualities.contains(SpecialQualities.PARISHABLE)) {
@@ -253,18 +241,13 @@ public class CargoSerializer {
     private static Collection<SpecialQualities> parseQualities(String text) {
         Collection<SpecialQualities> list = new ArrayList<>();
 
-        if (text == null) {
-            return list;
-        }
         if (text.equals("NONE")) {
             return list;
         }
 
         String[] parts = text.split(";");
         for (String part : parts) {
-            if (!part.trim().isEmpty()) {
-                list.add(SpecialQualities.valueOf(part.trim()));
-            }
+        	list.add(SpecialQualities.valueOf(part.trim()));
         }
 
         return list;

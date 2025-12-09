@@ -1,13 +1,11 @@
-package edu.westga.cs3211.pirateship.model.serializer.shipserializer;
+package edu.westga.cs3211.pirateship.model.serializer.cargoserializer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,27 +18,19 @@ import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.Stock;
 import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
-import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
-import edu.westga.cs3211.pirateship.model.Transaction;
+import edu.westga.cs3211.pirateship.model.serializers.CargoSerializer;
 import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 
-public class TestLoadShip {
+public class TestSaveCargo {
 	Ship ship;
 	User user;
 	AddContainerVM vm;
 	Container container1;
 	Container container2;
 	Container container3;
-	User crewMember1;
-	User crewMember2;
-	Transaction transaction1;
-	Transaction transaction2;
-	Transaction transaction3;
-	Transaction transaction4;
-	
-	private Date toDate(LocalDate date) {
-        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
+	Container container4;
+	Container container5;
+	Container container6;
 	
 	@BeforeEach
 	public void setUp() {
@@ -72,73 +62,87 @@ public class TestLoadShip {
 		stockValuable.add(stock3);
 		stockValuable.add(stock4);
 		
+		List<Stock> noQuals = new ArrayList<Stock>();
+		Stock stock5 = new Stock("Wood", 500, 4, new ArrayList<SpecialQualities>(), Conditions.FAIR, StockType.OTHER);
+		noQuals.add(stock5);
+		
+		List<Stock> missingExpiration = new ArrayList<Stock>();
+		Stock stock6 = new Stock("Cheese", 150, 2, qualitiesParish, Conditions.GOOD, StockType.FOOD);
+		missingExpiration.add(stock6);
+		
 		container1 = new Container(500, stockParish, 1, qualitiesParish, StockType.FOOD);
 		container2 = new Container(300, stockFragAndExplo, 2, qualitiesFragAndExplo, StockType.AMMUNITION);
 		container3 = new Container(400, stockValuable, 3, qualitiesValuable, StockType.OTHER);
-		
-		crewMember1 = new User("Will Turner", "willt", "swordfish", Roles.CREWMATE);
-		crewMember2 = new User("Elizabeth Swann", "lizs", "piratequeen", Roles.QUARTERMASTER);
-		
-		transaction1 = new Transaction(toDate(LocalDate.of(2024, 1, 10)), "Fruit", 100, crewMember1, StockType.FOOD, qualitiesParish);
-		transaction2 = new Transaction(toDate(LocalDate.of(2024, 2, 15)), "Ammo", 50, crewMember2, StockType.AMMUNITION, qualitiesFragAndExplo);
-		transaction3 = new Transaction(toDate(LocalDate.of(2024, 3, 10)), "Gold Coins", 200, crewMember1, StockType.OTHER, qualitiesValuable);
-		transaction4 = new Transaction(toDate(LocalDate.of(2024, 4, 5)), "Gems", 50, crewMember2, StockType.OTHER, qualitiesValuable);
+		container4 = new Container(200, new ArrayList<Stock>(), 4, qualitiesValuable, StockType.OTHER);
+		container5 = new Container(600, noQuals, 5, new ArrayList<SpecialQualities>(), StockType.OTHER);
+		container6 = new Container(350, missingExpiration, 6, qualitiesParish, StockType.FOOD);
 	}
 	
 	@Test
-	public void testSaveShipNoCrewNoCargoNoTransaction() {
-		ShipSerializer.saveShip(ship, "TestUsers.txt", "TestCargo.txt", "TestTransactions.txt");
-		Ship loadedShip = ShipSerializer.loadShip("TestUsers.txt", "TestCargo.txt", "TestTransactions.txt");
+	public void testSaveCargoNoContainers() {
+		CargoSerializer.saveCargo(ship, "TestCargo.txt");
+		Ship loadedShip = CargoSerializer.loadCargo("TestCargo.txt");
 		
 		assertEquals("Black Pearl", loadedShip.getName());
 		assertEquals(10000, loadedShip.getCargoHull().getCapacity());
-		assertEquals(0, loadedShip.getCrew().size());
 		assertEquals(0, loadedShip.getContainers().size());
-		assertEquals(0, loadedShip.getTransactions().size());
 	}
 	
 	@Test
-	public void testSaveShipWithCrewCargoAndTransactions() {
-		ship.addCrewMember(crewMember1);
-		ship.addCrewMember(crewMember2);
+	public void testSaveCargoContainerNoQals() {
+		this.ship.addContainer(container5);
 		
+		CargoSerializer.saveCargo(ship, "TestCargo.txt");
+		Ship loadedShip = CargoSerializer.loadCargo("TestCargo.txt");
+		
+		assertEquals("Black Pearl", loadedShip.getName());
+		assertEquals(10000, loadedShip.getCargoHull().getCapacity());
+		assertEquals(1, loadedShip.getContainers().size());
+		assertEquals(5, loadedShip.getContainers().get(0).getContainerID());
+	}
+	
+	@Test
+	public void testSaveCargoContainerNoStock() {
+		this.ship.addContainer(container4);
+		
+		CargoSerializer.saveCargo(ship, "TestCargo.txt");
+		Ship loadedShip = CargoSerializer.loadCargo("TestCargo.txt");
+		
+		assertEquals("Black Pearl", loadedShip.getName());
+		assertEquals(10000, loadedShip.getCargoHull().getCapacity());
+		assertEquals(1, loadedShip.getContainers().size());
+		assertEquals(4, loadedShip.getContainers().get(0).getContainerID());
+	}
+	
+	
+	@Test
+	public void testSaveCargoWithCrewCargoAndTransactions() {
 		ship.getContainers().add(container1);
 		ship.getContainers().add(container2);
 		ship.getContainers().add(container3);
 		
-		ship.getTransactions().add(transaction1);
-		ship.getTransactions().add(transaction2);
-		ship.getTransactions().add(transaction3);
-		ship.getTransactions().add(transaction4);
-		
-		ShipSerializer.saveShip(ship, "TestUsers.txt", "TestCargo.txt", "TestTransactions.txt");
-		Ship loadedShip = ShipSerializer.loadShip("TestUsers.txt", "TestCargo.txt", "TestTransactions.txt");
-		
-		ArrayList<String> loadedCrewNames = new ArrayList<String>();
-		for (User crewMember : loadedShip.getCrew()) {
-			loadedCrewNames.add(crewMember.getName());
-		}
+		CargoSerializer.saveCargo(ship, "TestCargo.txt");
+		Ship loadedShip = CargoSerializer.loadCargo("TestCargo.txt");
 		
 		ArrayList<Integer> loadedContainerIds = new ArrayList<Integer>();
+		ArrayList<String> loadedStockNames = new ArrayList<String>();
 		for (Container container : loadedShip.getContainers()) {
 			loadedContainerIds.add(container.getContainerID());
+			for (Stock stock : container.getStockItems()) {
+				loadedStockNames.add(stock.getName());
+			}
 		}
 		
-		ArrayList<Date> loadedTransactionDates = new ArrayList<Date>();
-		for (Transaction transaction : loadedShip.getTransactions()) {
-			loadedTransactionDates.add(transaction.getDate());
-		}
 		
 		assertEquals("Black Pearl", loadedShip.getName());
 		assertEquals(10000, loadedShip.getCargoHull().getCapacity());
-		assertTrue(loadedCrewNames.contains(crewMember1.getName()));
-		assertTrue(loadedCrewNames.contains(crewMember2.getName()));
 		assertTrue(loadedContainerIds.contains(container1.getContainerID()));
 		assertTrue(loadedContainerIds.contains(container1.getContainerID()));
 		assertTrue(loadedContainerIds.contains(container1.getContainerID()));
-		assertTrue(loadedTransactionDates.contains(transaction1.getDate()));
-		assertTrue(loadedTransactionDates.contains(transaction1.getDate()));
-		assertTrue(loadedTransactionDates.contains(transaction1.getDate()));
-		assertTrue(loadedTransactionDates.contains(transaction1.getDate()));
+		assertTrue(loadedStockNames.contains("Fruit"));
+		assertTrue(loadedStockNames.contains("Ammo"));
+		assertTrue(loadedStockNames.contains("Gold Coins"));
+		assertTrue(loadedStockNames.contains("Gems"));
 	}
+	
 }
