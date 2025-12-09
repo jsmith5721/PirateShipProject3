@@ -3,8 +3,8 @@ package edu.westga.cs3211.pirateship.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Models a container that holds stock items in the cargo hull of a pirate ship.
  * 
@@ -189,10 +189,24 @@ public class Container {
 	}
 	
 	
-	/*
-	 * Removes the stock item from the container
+	/**
+	 * Removes the stock item from the container.
+	 * 
+	 * @param stock The stock to remove
+	 * 
+	 * @param crewMember The crew member responsible for the removal
 	 */
 	public Transaction removeStockItem(Stock stock, User crewMember) {
+		if (!(stock instanceof Stock)) {
+			throw new IllegalArgumentException("stock must be an instance of Stock");
+		}
+		if (!(crewMember instanceof User)) {
+			throw new IllegalArgumentException("crewMember must be an instance of User");
+		}
+		if (!this.stockItems.contains(stock)) {
+			throw new NoSuchElementException("stock must be currently stored in the container");
+		}
+		
 		this.stockItems.remove(stock);
 		this.calculateRemainingCapacity();
 		var removedAmount = stock.getQuantity() * -1;
@@ -255,6 +269,12 @@ public class Container {
 				+ ", Special Qualities: [" + this.specialQualitiesString + "]";
 	}
 	
+	/**
+	 * Returns a boolean for whether the containers contains the given stock.
+	 * 
+	 * @param stock The stock to check for
+	 * @return a boolean for if the container contains the given stock
+	 */
 	public boolean contains(Stock stock)
 	{
 		if (!(stock instanceof Stock)) {

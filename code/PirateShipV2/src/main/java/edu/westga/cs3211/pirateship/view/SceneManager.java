@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Manages scene changes
+ * 
+ * @author Kirya Duncan II
+ * @version Fall 2025
+ */
 public class SceneManager {
 	private static Stage mainStage;
 	private static ArrayList<Scene> scenes = new ArrayList<Scene>();
@@ -28,10 +34,11 @@ public class SceneManager {
 	/*
 	 * Updates the stage to the most recent scene of a given scene path
 	 */
-	public static void previousScene() {
+	public static void previousScene(String sceneTitle) {
 		var lastScene = SceneManager.scenes.getLast();
 		SceneManager.setToScene(lastScene);
 		SceneManager.scenes.remove(lastScene);
+		SceneManager.setTitle(sceneTitle);
 	}
 	
 	private static void setToScene(Scene toScene) {
@@ -41,6 +48,10 @@ public class SceneManager {
 	
 	private static void setToScene(Scene toScene, String sceneTitle) {
 		SceneManager.setToScene(toScene);
+		SceneManager.setTitle(sceneTitle);
+	}
+	
+	private static void setTitle(String sceneTitle) {
 		SceneManager.mainStage.setTitle(sceneTitle);
 	}
 }

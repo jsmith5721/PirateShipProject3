@@ -132,7 +132,16 @@ public class CargoHull {
 		}
 	}
 	
+	/**
+	 * Returns the id of the container holding the given stock or -1 if none found.
+	 * 
+	 * @param stock The stock to find the storage container of
+	 * @return The id of the container
+	 */
 	public int getContainerIdStoringStock(Stock stock) {
+		if (!(stock instanceof Stock)) {
+			throw new IllegalArgumentException("stock must be an instance of Stock");
+		}
 		int storedContainerId = -1;
 		
 		for (var container : this.containers) {
@@ -145,12 +154,19 @@ public class CargoHull {
 		return storedContainerId;
 	}
 	
+	/**
+	 * Removes the given stock from its container and updates the transaction history
+	 * 
+	 * @param stock The stock to remove
+	 * @param containerId The id of the container to remove from
+	 * @param crewMember The member responsible for the removal
+	 */
 	public void removeStockFromContainer(Stock stock, int containerId, User crewMember) {
-		if (stock == null) {
-			throw new IllegalArgumentException("Stock cannot be null.");
+		if (!(stock instanceof Stock)) {
+			throw new IllegalArgumentException("Stock must be an instance of Stock");
 		}
-		if (crewMember == null) {
-			throw new IllegalArgumentException("Crewmember cannot be null.");
+		if (!(crewMember instanceof User)) {
+			throw new IllegalArgumentException("Crewmember must be an instance of User");
 		}
 		Container container = this.getContainerById(containerId);
 		if (container == null) {

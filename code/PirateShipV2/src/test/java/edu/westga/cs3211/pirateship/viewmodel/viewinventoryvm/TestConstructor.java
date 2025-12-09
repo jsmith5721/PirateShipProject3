@@ -15,6 +15,16 @@ public class TestConstructor {
     void testConstructorRejectsNullShip() {
         assertThrows(IllegalArgumentException.class, () -> new ViewInventoryVM(null));
     }
+    
+    @Test
+    void testConstructorSetsShipProperly() {
+    	Ship ship = new Ship("Flying Dutchman", 500);
+        User user = new User("Emi", "emi", "pw", Roles.COOK);
+        ship.setCurrentUser(user);
+        ViewInventoryVM vm = new ViewInventoryVM(ship);
+        
+        assertEquals(ship, vm.getShip());
+    }
 
     @Test
     void testConstructorWelcomeMessageWithCurrentUser() {
@@ -28,12 +38,11 @@ public class TestConstructor {
     }
 
     @Test
-    void testConstructorWelcomeMessageWithoutCurrentUser() {
+    void testConstructorExceptionWithoutCurrentUser() {
         Ship ship = new Ship("Flying Dutchman", 500);
-        ship.setCurrentUser(null);
-
-        ViewInventoryVM vm = new ViewInventoryVM(ship);
-
-        assertEquals("Welcome", vm.welcomeMessageProperty().get());
+        
+        assertThrows(IllegalArgumentException.class, () -> {
+        	ship.setCurrentUser(null);
+        });
     }
 }

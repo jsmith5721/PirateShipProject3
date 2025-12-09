@@ -90,7 +90,7 @@ public class ViewInventoryView {
 	 */
 	public void returnToLandingPage(ActionEvent event) {
 		try {
-			SceneManager.previousScene();
+			SceneManager.previousScene("Flying Dutchman – Home");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Alert alert = new Alert(Alert.AlertType.ERROR, "Error loading Landing Page.");
