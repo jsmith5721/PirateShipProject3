@@ -113,7 +113,6 @@ public class TransactionSerializer {
 
 		List<Transaction> result = new ArrayList<>();
 
-		boolean reading = false;
 		long millis = 0;
 		String name = "";
 		int qty = 0;
@@ -122,11 +121,9 @@ public class TransactionSerializer {
 		ArrayList<SpecialQualities> qualities = new ArrayList<>();
 
 		for (String raw : lines) {
-
 			String line = raw.trim();
 
 			if (line.equals("BEGIN-TRANSACTION")) {
-				reading = true;
 				qualities = new ArrayList<>();
 				continue;
 			}
@@ -135,11 +132,6 @@ public class TransactionSerializer {
 				Date date = new Date(millis);
 				Transaction transaction = new Transaction(date, name, qty, crew, stockType, qualities);
 				result.add(transaction);
-				reading = false;
-				continue;
-			}
-
-			if (!reading) {
 				continue;
 			}
 
@@ -156,7 +148,7 @@ public class TransactionSerializer {
 			} else if (line.startsWith("STOCKTYPE")) {
 				String[] parts = line.split(" ");
 				stockType = StockType.valueOf(parts[1]);
-			} else if (line.startsWith("QUALITIES")) {
+			} else {
 				qualities = parseQualitiesList(line);
 			}
 		}
@@ -179,13 +171,9 @@ public class TransactionSerializer {
 		String encoded = line.split(" ", 2)[1];
 		String decoded = unsanitize(encoded);
 
-		if (!decoded.isEmpty()) {
-			String[] parts = decoded.split(",");
-			for (String part : parts) {
-				if (!part.trim().isEmpty()) {
-					list.add(SpecialQualities.valueOf(part.trim()));
-				}
-			}
+		String[] parts = decoded.split(",");
+		for (String part : parts) {
+			list.add(SpecialQualities.valueOf(part.trim()));
 		}
 		return list;
 	}

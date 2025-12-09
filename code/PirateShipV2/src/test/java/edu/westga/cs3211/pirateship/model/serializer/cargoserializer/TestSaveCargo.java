@@ -19,12 +19,10 @@ import edu.westga.cs3211.pirateship.model.Stock;
 import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.serializers.CargoSerializer;
-import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 
 public class TestSaveCargo {
 	Ship ship;
 	User user;
-	AddContainerVM vm;
 	Container container1;
 	Container container2;
 	Container container3;

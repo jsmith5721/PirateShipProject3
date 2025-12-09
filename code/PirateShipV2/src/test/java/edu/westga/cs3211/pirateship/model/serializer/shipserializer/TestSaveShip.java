@@ -22,12 +22,10 @@ import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.User;
 import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import edu.westga.cs3211.pirateship.model.Transaction;
-import edu.westga.cs3211.pirateship.viewmodel.AddContainerVM;
 
 public class TestSaveShip {
 	Ship ship;
 	User user;
-	AddContainerVM vm;
 	Container container1;
 	Container container2;
 	Container container3;
