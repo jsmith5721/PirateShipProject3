@@ -6,9 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import edu.westga.cs3211.pirateship.model.Ship;
-
-import java.io.IOException;
-
 import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Container;
 import edu.westga.cs3211.pirateship.model.Roles;
@@ -50,27 +47,26 @@ public class ViewInventoryVM {
 	 * 
 	 * @param stocksToRemove The stocks to remove
 	 */
-    public void removeStock(Iterable<Stock> stocksToRemove) {
-    	if (!(stocksToRemove instanceof Iterable<Stock>)) {
-    		throw new IllegalArgumentException("stocksToRemove must be an instance of Iterable<Stock>");
-    	}
-    	var shipHull = this.ship.getCargoHull();
-    	var user = this.ship.getCurrentUser();
-    	
-    	for (var stock : stocksToRemove)
-    	{
-    		var containerId = shipHull.getContainerIdStoringStock(stock);
-    		if (containerId != -1)
-    		{
-    			shipHull.removeStockFromContainer(stock, containerId, user);
-    		}
-    		
-    		this.stocks.remove(stock);
-    	}
-    }
-	
+	public void removeStock(Iterable<Stock> stocksToRemove) {
+		if (!(stocksToRemove instanceof Iterable<Stock>)) {
+			throw new IllegalArgumentException("stocksToRemove must be an instance of Iterable<Stock>");
+		}
+		var shipHull = this.ship.getCargoHull();
+		var user = this.ship.getCurrentUser();
+
+		for (var stock : stocksToRemove) {
+			var containerId = shipHull.getContainerIdStoringStock(stock);
+			if (containerId != -1) {
+				shipHull.removeStockFromContainer(stock, containerId, user);
+			}
+
+			this.stocks.remove(stock);
+		}
+	}
+
 	/**
 	 * Gets a list of stocks in the ship.
+	 * 
 	 * @return list of stocks in inventory
 	 */
 	public ObservableList<Stock> getStocks() {
@@ -85,9 +81,10 @@ public class ViewInventoryVM {
 	public StringProperty welcomeMessageProperty() {
 		return this.welcomeMessageProperty;
 	}
-	
+
 	/**
 	 * Getter for the ship.
+	 * 
 	 * @return the ship
 	 */
 	public Ship getShip() {
@@ -150,6 +147,7 @@ public class ViewInventoryVM {
 	 * Save data.
 	 */
 	public void saveData() {
-		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE,
+				ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }
