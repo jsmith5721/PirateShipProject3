@@ -24,6 +24,7 @@ public class Main extends Application {
 			Pane root = this.loadGui();
 			Scene scene = new Scene(root);
 
+			
 			primaryStage.setScene(scene);
 			primaryStage.setTitle(WINDOW_TITLE);
 			primaryStage.show();

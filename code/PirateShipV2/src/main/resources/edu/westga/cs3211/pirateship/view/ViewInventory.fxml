@@ -7,22 +7,19 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.Pane?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="edu.westga.cs3211.pirateship.view.ViewInventoryView">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.cs3211.pirateship.view.ViewInventoryView">
 
     <top>
-    <VBox spacing="10" alignment="CENTER">
+    <VBox alignment="CENTER" spacing="10">
         <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
+            <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
 
-        <HBox spacing="10" alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" spacing="10">
             <children>
                 <Label fx:id="welcomeLable" text="Welcome, &lt;name&gt;">
                     <font>
@@ -40,8 +37,7 @@
             </children>
         </HBox>
 
-        <Label text="View Inventory"
-               style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+        <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="View Inventory" />
     </VBox>
 	</top>
 
@@ -59,15 +55,13 @@
     </center>
 
     <bottom>
-    <HBox alignment="CENTER" spacing="20">
-        <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
-        </padding>
-
-        <Button fx:id="removeButton" text="Remove Stock" />
-        <Button fx:id="backButton" onAction="#returnToLandingPage" text="Back" />
-    </HBox>
-</bottom>
-
-
+	    <HBox alignment="CENTER" spacing="20">
+	        <padding>
+	            <Insets bottom="10" left="10" right="10" top="10" />
+	        </padding>
+	
+	        <Button fx:id="removeButton" onAction="#removeSelectedStock" text="Remove Stock" />
+	        <Button fx:id="backButton" onAction="#returnToLandingPage" text="Back" />
+	    </HBox>
+	</bottom>
 </BorderPane>

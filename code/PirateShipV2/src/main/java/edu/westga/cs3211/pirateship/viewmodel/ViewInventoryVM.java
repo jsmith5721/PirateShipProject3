@@ -42,12 +42,32 @@ public class ViewInventoryVM {
 		this.ship = ship;
 		this.stocks = FXCollections.observableArrayList();
 
-		if (ship.getCurrentUser() != null) {
-			this.welcomeMessageProperty = new SimpleStringProperty("Welcome, " + ship.getCurrentUser().getName());
-		} else {
-			this.welcomeMessageProperty = new SimpleStringProperty("Welcome");
-		}
+		this.welcomeMessageProperty = new SimpleStringProperty("Welcome, " + ship.getCurrentUser().getName());
 	}
+
+	/**
+	 * Removes the given collection of stocks from storage
+	 * 
+	 * @param stocksToRemove The stocks to remove
+	 */
+    public void removeStock(Iterable<Stock> stocksToRemove) {
+    	if (!(stocksToRemove instanceof Iterable<Stock>)) {
+    		throw new IllegalArgumentException("stocksToRemove must be an instance of Iterable<Stock>");
+    	}
+    	var shipHull = this.ship.getCargoHull();
+    	var user = this.ship.getCurrentUser();
+    	
+    	for (var stock : stocksToRemove)
+    	{
+    		var containerId = shipHull.getContainerIdStoringStock(stock);
+    		if (containerId != -1)
+    		{
+    			shipHull.removeStockFromContainer(stock, containerId, user);
+    		}
+    		
+    		this.stocks.remove(stock);
+    	}
+    }
 	
 	/**
 	 * Gets a list of stocks in the ship.
