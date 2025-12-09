@@ -1,9 +1,7 @@
 package edu.westga.cs3211.pirateship.model.serializers;
 
-import java.io.IOException;
 import java.util.List;
 
-import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.Transaction;
 
@@ -24,61 +22,33 @@ public class ShipSerializer {
 	 * @param usersFile the file to save users to
 	 * @param cargoFile the file to save cargo to
 	 * @param transactionFile the file to save transactions to
-	 * @throws IOException 
 	 */
-	public static void saveShip(Ship ship, String usersFile, String cargoFile, String transactionFile) throws IOException {
-		try {
-			UserSerializer.saveUsers(ship, usersFile);
-		} catch (IOException ex) {
-			throw ex;
-		}
+	public static void saveShip(Ship ship, String usersFile, String cargoFile, String transactionFile) {
+		UserSerializer.saveUsers(ship, usersFile);
+				
+		CargoSerializer.saveCargo(ship, cargoFile);
 		
-		try {
-			CargoSerializer.saveCargo(ship.getCargoHull(), cargoFile);
-		} catch (IOException ex) {
-			throw ex;
-		}
-
-		try {
-			TransactionSerializer.saveTransactionHistory(ship.getCargoHull(), transactionFile);
-		} catch (IOException ex) {
-			throw ex;
-		}
+		TransactionSerializer.saveTransactionHistory(ship, transactionFile);
 	}
 	
 	/**
 	 * Load ship.
 	 *
+	 * @param usersFile the file to load users from
+	 * @param cargoFile the file to load cargo from
+	 * @param transactionFile the file to load transactions from
 	 * @return the ship
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public static Ship loadShip() throws IOException {
-		Ship ship = new Ship("Flying Duchman", 5000);
-		
-		try {
-            UserSerializer.loadUsers(ship);
-        } catch (IOException ex) {
-            throw ex;
-        }
-		
-		try {
-        	CargoHull hull = CargoSerializer.loadCargo();
-            if (hull != null) {
-            	ship.setCargoHull(hull);
-            }
-        } catch (IOException ex) {
-            throw ex;
-        }
+	public static Ship loadShip(String usersFile, String cargoFile, String transactionFile) {
+		Ship loadedShip = CargoSerializer.loadCargo(cargoFile);
 
-        try {
-            List<Transaction> transactions = TransactionSerializer.loadTransactionHistory();
-            if (transactions != null) {
-            	ship.getCargoHull().getTransactionHistory().addAll(transactions);
-            }
-        } catch (IOException ex) {
-        	throw ex;
+        UserSerializer.loadUsers(loadedShip, usersFile);
+		 
+        List<Transaction> transactions = TransactionSerializer.loadTransactionHistory(transactionFile);
+        if (transactions != null) {
+            loadedShip.getCargoHull().getTransactionHistory().addAll(transactions);
         }
         
-        return ship;
+        return loadedShip;
 	}
 }

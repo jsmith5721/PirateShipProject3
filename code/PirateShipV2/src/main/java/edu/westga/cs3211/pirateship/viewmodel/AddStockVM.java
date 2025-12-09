@@ -1,6 +1,5 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +53,57 @@ public class AddStockVM {
 	 * @param currentUser the currently logged in user
 	 */
 	public AddStockVM(User currentUser) {
-		try {
-			this.ship = ShipSerializer.loadShip();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.ship = ShipSerializer.loadShip(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		
+		this.ship.setCurrentUser(currentUser);
+		
+		this.name = new SimpleStringProperty();
+		this.size = new SimpleIntegerProperty();
+		this.quantity = new SimpleIntegerProperty(1);
+		this.condition = new SimpleObjectProperty<>();
+		this.stockType = new SimpleObjectProperty<>();
+		this.expirationDate = new SimpleObjectProperty<>();
+
+		ArrayList<SpecialQualities> qualitiesList = new ArrayList<>();
+		qualitiesList.add(SpecialQualities.PARISHABLE);
+		qualitiesList.add(SpecialQualities.FRAGILE);
+		qualitiesList.add(SpecialQualities.EXPLOSIVE);
+		qualitiesList.add(SpecialQualities.LIQUID);
+		qualitiesList.add(SpecialQualities.VALUABLE);
+
+		this.specialQualitiesList = new SimpleListProperty<>(FXCollections.observableArrayList(qualitiesList));
+		this.selectedSpecialQualities = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+		this.masterContainerList = FXCollections.observableArrayList(this.ship.getContainers());
+
+		this.filteredContainerList = new SimpleListProperty<>(FXCollections.observableArrayList());
+		this.filteredContainerList.addAll(this.masterContainerList);
+
+		this.selectedContainer = new SimpleObjectProperty<>();
+
+		this.showExpiration = new SimpleBooleanProperty(false);
+		BooleanBinding binding = new BooleanBinding() {
+			{
+				super.bind(AddStockVM.this.selectedSpecialQualities);
+			}
+
+			@Override
+			protected boolean computeValue() {
+				return AddStockVM.this.selectedSpecialQualities.contains(SpecialQualities.PARISHABLE);
+			}
+		};
+		this.showExpiration.bind(binding);
+	}
+	
+	/**
+	 * FOR TESTING PURPOSES ONLY
+	 * Instantiates a new AddStockVM.
+	 *
+	 * @param currentUser the currently logged in user
+	 * @param ship the ship
+	 */
+	public AddStockVM(User currentUser, Ship ship) {
+		this.ship = ship;
 		
 		this.ship.setCurrentUser(currentUser);
 		
@@ -363,10 +408,6 @@ public class AddStockVM {
 	 * Save data.
 	 */
 	public void saveData() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }

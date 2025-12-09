@@ -9,8 +9,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.io.IOException;
-
 /**
  * The Class LandingPageVM.
  * 
@@ -28,17 +26,28 @@ public class LandingPageVM {
 	 * @param currentUser the currently logged in user
 	 */
 	public LandingPageVM(User currentUser) {
-		try {
-			this.ship = ShipSerializer.loadShip();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.ship = ShipSerializer.loadShip(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 
 		this.ship.setCurrentUser(currentUser);
 
 		this.welcomeMessage = new SimpleStringProperty("Welcome, " + this.ship.getCurrentUser().getName());
 		this.canReviewStockChanges = new SimpleBooleanProperty(this.ship.getCurrentUser().getRole() == Roles.QUARTERMASTER);
+	}
+	
+	/**
+	 * FOR TESTING PURPOSES ONLY
+	 * Instantiates a new landing page VM.
+	 * 
+	 * @param currentUser the currently logged in user
+	 * @param ship        the ship
+	 */
+	public LandingPageVM(User currentUser, Ship ship) {
+		this.ship = ship;
 
+		this.ship.setCurrentUser(currentUser);
+
+		this.welcomeMessage = new SimpleStringProperty("Welcome, " + this.ship.getCurrentUser().getName());
+		this.canReviewStockChanges = new SimpleBooleanProperty(this.ship.getCurrentUser().getRole() == Roles.QUARTERMASTER);
 	}
 
 	/**
@@ -72,11 +81,6 @@ public class LandingPageVM {
 	 * Save data.
 	 */
 	public void saveData() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE,
-					ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }

@@ -1,6 +1,5 @@
 package edu.westga.cs3211.pirateship.viewmodel;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -40,11 +39,42 @@ public class StockChangesVM {
 	 * @param currentUser the currently logged in user
 	 */
 	public StockChangesVM(User currentUser) {
-		try {
-			this.ship = ShipSerializer.loadShip();
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		this.ship = ShipSerializer.loadShip(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+		
+		this.ship.setCurrentUser(currentUser);
+
+		this.masterTransactionList = new SimpleListProperty<>(
+				FXCollections.observableArrayList(this.ship.getTransactions()));
+
+		this.filteredTransactionList = new SimpleListProperty<>(
+				FXCollections.observableArrayList(this.masterTransactionList));
+
+		this.specialQualitiesList = new SimpleListProperty<>(
+				FXCollections.observableArrayList(SpecialQualities.values()));
+		this.selectedSpecialQualities = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+		ArrayList<String> names = new ArrayList<>();
+		for (User user : this.ship.getCrew()) {
+			names.add(user.getName());
 		}
+		this.crewmemberList = new SimpleListProperty<>(FXCollections.observableArrayList(names));
+		this.selectedCrewmember = new SimpleObjectProperty<>();
+		
+		this.selectedStockType = new SimpleObjectProperty<>();
+
+		this.startDate = new SimpleObjectProperty<>(null);
+		this.endDate = new SimpleObjectProperty<>(null);
+	}
+	
+	/**
+	 * Instantiates a new StockChangesVM.
+	 *
+	 * @param currentUser the currently logged in user
+	 * @param ship        the ship
+	 */
+	public StockChangesVM(User currentUser, Ship ship) {
+		this.ship = ship;
+		
 		this.ship.setCurrentUser(currentUser);
 
 		this.masterTransactionList = new SimpleListProperty<>(
@@ -264,11 +294,7 @@ public class StockChangesVM {
 	 * Saves the ship data.
 	 */
 	public void saveData() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 
 }

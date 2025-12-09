@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import edu.westga.cs3211.pirateship.model.CargoHull;
 import edu.westga.cs3211.pirateship.model.Roles;
+import edu.westga.cs3211.pirateship.model.Ship;
 import edu.westga.cs3211.pirateship.model.SpecialQualities;
 import edu.westga.cs3211.pirateship.model.StockType;
 import edu.westga.cs3211.pirateship.model.Transaction;
@@ -26,25 +26,34 @@ public class TransactionSerializer {
 	/**
 	 * Serializes the transaction history of the given CargoHull to a file.
 	 * 
-	 * @param hull the CargoHull whose transaction history to serialize
+	 * @param ship the ship whose transaction history to serialize
 	 * @param file the file to serialize to
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static void saveTransactionHistory(CargoHull hull, String file) throws IOException {
-		String data = writeAll(hull.getTransactionHistory());
+	public static void saveTransactionHistory(Ship ship, String file) {
+		String data = writeAll(ship.getCargoHull().getTransactionHistory());
 		try (FileWriter out = new FileWriter(file)) {
 			out.write(data);
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 
 	/**
 	 * Loads the transaction history from a file.
 	 * 
+	 * @param file the file to load from
 	 * @return the loaded list of Transactions
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static List<Transaction> loadTransactionHistory() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get(ShipSerializer.TRANSACTION_TXT_FILE));
+	public static List<Transaction> loadTransactionHistory(String file) {
+		List<String> lines = new ArrayList<>();
+		try {
+			lines = Files.readAllLines(Paths.get(file));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
 		if (lines.isEmpty()) {
 			return null;
 		}

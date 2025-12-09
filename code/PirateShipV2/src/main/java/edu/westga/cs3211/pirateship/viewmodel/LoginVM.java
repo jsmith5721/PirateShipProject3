@@ -7,8 +7,6 @@ import edu.westga.cs3211.pirateship.model.serializers.ShipSerializer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.io.IOException;
-
 /**
  * The Class LoginVM.
  * @author Justin Smith
@@ -23,11 +21,20 @@ public class LoginVM {
      * Instantiates a new login VM.
      */
     public LoginVM() {
-    	try {
-			this.ship = ShipSerializer.loadShip();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+    	this.ship = ShipSerializer.loadShip(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
+    	
+        this.username = new SimpleStringProperty("");
+        this.password = new SimpleStringProperty("");
+    }
+    
+    /**
+     * FOR TESTING PURPOSES ONLY
+     * Instantiates a new login VM.
+     * 
+     * @param ship the ship
+     */
+    public LoginVM(Ship ship) {
+    	this.ship = ship;
     	
         this.username = new SimpleStringProperty("");
         this.password = new SimpleStringProperty("");
@@ -83,11 +90,7 @@ public class LoginVM {
     /**
      * Save users.
      */
-    public void saveShip() {
-		try {
-			ShipSerializer.saveShip(this.ship, ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+    public void saveData() {
+    	this.ship.saveShipData(ShipSerializer.USERS_TXT_FILE, ShipSerializer.CARGO_TXT_FILE, ShipSerializer.TRANSACTION_TXT_FILE);
 	}
 }

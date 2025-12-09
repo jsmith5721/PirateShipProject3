@@ -3,6 +3,7 @@ package edu.westga.cs3211.pirateship.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Models a transaction in the pirate ship system.
@@ -30,7 +31,7 @@ public class Transaction {
 	 * @param specialQualities the special qualities of the stock that was
 	 *                         transacted.
 	 */
-	public Transaction(Date date, String stockName, int quantity, User crewmember, StockType stockType, ArrayList<SpecialQualities> specialQualities) {
+	public Transaction(Date date, String stockName, int quantity, User crewmember, StockType stockType, List<SpecialQualities> specialQualities) {
 		this.date = date;
 		this.stockName = stockName;
 		this.quantity = quantity;

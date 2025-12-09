@@ -21,9 +21,8 @@ public class UserSerializer {
      *
      * @param ship the ship
      * @param file the file to save to
-     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public static void saveUsers(Ship ship, String file) throws IOException {
+    public static void saveUsers(Ship ship, String file) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
 
             for (User user : ship.getCrew()) {
@@ -34,6 +33,8 @@ public class UserSerializer {
                         + user.getRole().name()
                 );
             }
+        } catch (IOException ex) {
+        	ex.printStackTrace();
         }
     }
 
@@ -41,10 +42,10 @@ public class UserSerializer {
      * Load users.
      *
      * @param ship the ship
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @param file the file to load from
      */
-    public static void loadUsers(Ship ship) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(ShipSerializer.USERS_TXT_FILE))) {
+    public static void loadUsers(Ship ship, String file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 			String line;
         	while ((line = reader.readLine()) != null) {
         		String[] userText = line.split(",", -1);
@@ -56,7 +57,7 @@ public class UserSerializer {
                 ship.addCrewMember(new User(name, username, password, role));
 			}
 		} catch (IOException ex) {
-			throw ex;
+			ex.printStackTrace();
 		}
     }
 
